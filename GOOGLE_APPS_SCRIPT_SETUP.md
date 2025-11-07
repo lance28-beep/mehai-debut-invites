@@ -48,19 +48,34 @@ function doPost(e) {
   
   try {
     if (body.action === 'update') {
-      // Find and update row by name
+      // Find and update row by name (supports originalName for lookup if name changed)
       const lastRow = sheet.getLastRow();
       let found = false;
+      const searchName = (body.originalName || body.Name || '').toString().trim();
+      const newName = (body.Name || searchName || '').toString().trim();
+      
+      // Get values with proper defaults
+      const emailValue = (body.Email && body.Email.toString().trim() !== '') ? body.Email.toString().trim() : 'Pending';
+      const rsvpValue = (body.RSVP && body.RSVP.toString().trim() !== '') ? body.RSVP.toString().trim() : '';
+      const guestValue = (body.Guest && body.Guest.toString().trim() !== '') ? body.Guest.toString().trim() : '1';
+      const messageValue = (body.Message && body.Message.toString().trim() !== '') ? body.Message.toString().trim() : '';
+      
+      if (!searchName) {
+        return ContentService.createTextOutput(
+          JSON.stringify({ error: 'Name is required for update' })
+        ).setMimeType(ContentService.MimeType.JSON);
+      }
       
       for (let i = 2; i <= lastRow; i++) {
         const cellValue = sheet.getRange(i, 1).getValue().toString().trim();
-        const searchName = body.Name.trim();
         
         if (cellValue === searchName) {
-          // Update the existing row
-          sheet.getRange(i, 2).setValue(body.Email || 'Pending');
-          sheet.getRange(i, 3).setValue(body.RSVP || '');
-          sheet.getRange(i, 4).setValue(body.Message || '');
+          // Update the existing row - update all columns
+          sheet.getRange(i, 1).setValue(newName); // Column 1: Name
+          sheet.getRange(i, 2).setValue(emailValue); // Column 2: Email
+          sheet.getRange(i, 3).setValue(rsvpValue); // Column 3: RSVP
+          sheet.getRange(i, 4).setValue(guestValue); // Column 4: Guest
+          sheet.getRange(i, 5).setValue(messageValue); // Column 5: Message
           found = true;
           break;
         }
@@ -69,10 +84,11 @@ function doPost(e) {
       if (!found) {
         // If not found, add as new guest instead
         sheet.appendRow([
-          body.Name,
-          body.Email || 'Pending',
-          body.RSVP || '',
-          body.Message || ''
+          newName,
+          emailValue,
+          rsvpValue,
+          guestValue,
+          messageValue
         ]);
       }
       
@@ -96,6 +112,7 @@ function doPost(e) {
         body.Name,
         body.Email || 'Pending',
         body.RSVP || '',
+        body.Guest || '',
         body.Message || ''
       ]);
     }
@@ -125,7 +142,8 @@ function doGet(e) {
       Name: values[i][0],
       Email: values[i][1],
       RSVP: values[i][2],
-      Message: values[i][3]
+      Guest: values[i][3],
+      Message: values[i][4]
     });
   }
   
@@ -140,7 +158,7 @@ function testSetup() {
     const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('GuestList');
     const lastRow = sheet.getLastRow();
     Logger.log('Sheet found. Last row: ' + lastRow);
-    Logger.log('Headers: ' + sheet.getRange(1, 1, 1, 4).getValues());
+    Logger.log('Headers: ' + sheet.getRange(1, 1, 1, 5).getValues());
     return 'Setup looks good! Sheet has ' + (lastRow - 1) + ' guest(s).';
   } catch (error) {
     Logger.log('Error: ' + error.toString());
@@ -165,7 +183,7 @@ function testUpdateLogic() {
       if (cellValue === testName.trim()) {
         Logger.log('Match found at row ' + i + '!');
         found = true;
-        Logger.log('Would update: Email, RSVP, Message');
+        Logger.log('Would update: Email, RSVP, Guest, Message');
         break;
       }
     }
@@ -220,13 +238,13 @@ After pasting the code into the Apps Script editor:
 
 Your sheet should be named `GuestList` with the following columns:
 
-| Column A | Column B | Column C | Column D |
-|----------|----------|----------|----------|
-| Name     | Email    | RSVP     | Message  |
+| Column A | Column B | Column C | Column D | Column E |
+|----------|----------|----------|----------|----------|
+| Name     | Email    | RSVP     | Guest    | Message  |
 
 ### Header Row (Row 1)
 ```
-Name | Email | RSVP | Message
+Name | Email | RSVP | Guest | Message
 ```
 
 ## Features Implemented
@@ -244,12 +262,12 @@ Name | Email | RSVP | Message
 ### 3. Add Guest
 - Form to add new guests to the list
 - Validates required fields (Name, RSVP)
-- Email and Message are optional
+- Email, Guest count, and Message are optional
 
 ### 4. Update Guest (Edit)
 - Edit button to modify guest information
 - Update RSVP status (Yes/No/Maybe)
-- Update email and message
+- Update email, guest count, and message
 - Save changes back to Google Sheets
 
 ### 5. Delete Guest
@@ -306,7 +324,7 @@ All endpoints are located at `/api/guests`:
 **Problem:** The script is adding new rows instead of updating existing ones.
 
 **Solution:**
-1. Make sure you've copied the **complete updated code** from above (lines 33-180)
+1. Make sure you've copied the **complete updated code** from above (lines 35-182)
 2. The updated script includes `.toString().trim()` to handle different data types
 3. **Most importantly**: You MUST create a **new deployment** after updating the script
 4. Old deployments continue to use the old code even if you update the script editor
@@ -320,7 +338,7 @@ All endpoints are located at `/api/guests`:
 **Possible causes:**
 1. **Check Google Apps Script permissions**: Ensure the web app is deployed with "Anyone can access" and "Execute as me"
 2. **Verify sheet name**: The sheet must be named exactly `GuestList` (case-sensitive)
-3. **Check column order**: Ensure columns are in the correct order (Name, Email, RSVP, Message)
+3. **Check column order**: Ensure columns are in the correct order (Name, Email, RSVP, Guest, Message)
 4. **Test the URL**: Try accessing the Google Apps Script URL directly in a browser (should return JSON)
 5. **Check console logs**: Look for any errors in the browser console
 

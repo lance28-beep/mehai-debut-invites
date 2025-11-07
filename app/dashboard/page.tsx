@@ -23,6 +23,7 @@ interface Guest {
   Name: string
   Email: string
   RSVP: string
+  Guest: string
   Message: string
 }
 
@@ -31,6 +32,7 @@ interface GuestRequest {
   Email: string
   Phone: string
   RSVP: string
+  Guest: string
   Message: string
 }
 
@@ -55,6 +57,7 @@ export default function DashboardPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [showAddForm, setShowAddForm] = useState(false)
+  const [showAddGuestModal, setShowAddGuestModal] = useState(false)
   const [editingGuest, setEditingGuest] = useState<Guest | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<"guests" | "requests" | "entourage" | "principalsponsor">("guests")
@@ -64,6 +67,8 @@ export default function DashboardPage() {
   const [filteredRequests, setFilteredRequests] = useState<GuestRequest[]>([])
   const [searchRequestQuery, setSearchRequestQuery] = useState("")
   const [editingRequest, setEditingRequest] = useState<GuestRequest | null>(null)
+  const [showAddToGuestListModal, setShowAddToGuestListModal] = useState(false)
+  const [requestToAdd, setRequestToAdd] = useState<GuestRequest | null>(null)
 
   // Entourage state
   const [entourage, setEntourage] = useState<Entourage[]>([])
@@ -71,6 +76,7 @@ export default function DashboardPage() {
   const [searchEntourageQuery, setSearchEntourageQuery] = useState("")
   const [editingEntourage, setEditingEntourage] = useState<Entourage | null>(null)
   const [showEntourageForm, setShowEntourageForm] = useState(false)
+  const [showEntourageModal, setShowEntourageModal] = useState(false)
 
   // Shared confirm modal state
   const [confirmOpen, setConfirmOpen] = useState(false)
@@ -84,14 +90,19 @@ export default function DashboardPage() {
   const [searchPrincipalSponsorQuery, setSearchPrincipalSponsorQuery] = useState("")
   const [editingPrincipalSponsor, setEditingPrincipalSponsor] = useState<PrincipalSponsor | null>(null)
   const [showPrincipalSponsorForm, setShowPrincipalSponsorForm] = useState(false)
+  const [showPrincipalSponsorModal, setShowPrincipalSponsorModal] = useState(false)
 
   // Form state
   const [formData, setFormData] = useState({
     Name: "",
     Email: "",
     RSVP: "",
+    Guest: "",
     Message: "",
   })
+  
+  // Edit modal state
+  const [editModalOpen, setEditModalOpen] = useState(false)
 
   // Request form state
   const [requestFormData, setRequestFormData] = useState({
@@ -99,6 +110,7 @@ export default function DashboardPage() {
     Email: "",
     Phone: "",
     RSVP: "",
+    Guest: "",
     Message: "",
   })
 
@@ -205,8 +217,15 @@ export default function DashboardPage() {
         throw new Error("Failed to fetch guests")
       }
       const data = await response.json()
-      setGuests(data)
-      setFilteredGuests(data)
+      
+      // Ensure Guest field exists for all guests
+      const normalizedGuests = Array.isArray(data) ? data.map((guest: Guest) => ({
+        ...guest,
+        Guest: guest.Guest || '1', // Default to 1 if missing
+      })) : []
+      
+      setGuests(normalizedGuests)
+      setFilteredGuests(normalizedGuests)
     } catch (error) {
       console.error("Error fetching guests:", error)
       setError("Failed to load guest list")
@@ -268,7 +287,7 @@ export default function DashboardPage() {
   }
 
   const handleAddGuest = async () => {
-    if (!formData.Name) {
+    if (!formData.Name || !formData.Name.trim()) {
       setError("Name is required")
       setTimeout(() => setError(null), 3000)
       return
@@ -284,7 +303,13 @@ export default function DashboardPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          Name: formData.Name.trim(),
+          Email: "", // Empty - guest will fill this in
+          RSVP: "", // Empty - guest will fill this in
+          Guest: "", // Empty - guest will fill this in
+          Message: "", // Empty - guest will fill this in
+        }),
       })
 
       if (!response.ok) {
@@ -293,8 +318,8 @@ export default function DashboardPage() {
 
       setSuccessMessage("Guest added successfully!")
       setTimeout(() => setSuccessMessage(null), 3000)
-      setFormData({ Name: "", Email: "", RSVP: "", Message: "" })
-      setShowAddForm(false)
+      setFormData({ Name: "", Email: "", RSVP: "", Guest: "", Message: "" })
+      setShowAddGuestModal(false)
       await fetchGuests()
     } catch (error) {
       console.error("Error adding guest:", error)
@@ -311,39 +336,82 @@ export default function DashboardPage() {
       setTimeout(() => setError(null), 3000)
       return
     }
+    if (!formData.RSVP) {
+      setError("RSVP status is required")
+      setTimeout(() => setError(null), 3000)
+      return
+    }
+    if (!formData.Guest || parseInt(formData.Guest) < 1) {
+      setError("Number of guests must be at least 1")
+      setTimeout(() => setError(null), 3000)
+      return
+    }
 
     setIsLoading(true)
     setError(null)
     setSuccessMessage(null)
 
     try {
+      // Use the original guest name for lookup in Google Sheets
+      // The Google Apps Script searches by originalName (if provided) or Name
+      const originalName = String(editingGuest.Name || '').trim()
+      const newName = String(formData.Name || '').trim()
+      const nameChanged = originalName !== newName
+
+      // Safely convert all values to strings
+      const updatePayload = {
+        originalName: originalName, // Original name for lookup
+        Name: newName, // New name to update to (if changed)
+        Email: String(formData.Email || '').trim() || "Pending",
+        RSVP: String(formData.RSVP || '').trim(),
+        Guest: String(formData.Guest || '').trim() || "1",
+        Message: String(formData.Message || '').trim(),
+      }
+
       const response = await fetch("/api/guests", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          action: "update",
-          Name: formData.Name,
-          Email: formData.Email || "Pending",
-          RSVP: formData.RSVP,
-          Message: formData.Message,
-        }),
+        body: JSON.stringify(updatePayload),
       })
 
-      if (!response.ok) {
-        throw new Error("Failed to update guest")
+      // Get response text first to handle both JSON and non-JSON responses
+      const responseText = await response.text()
+      let data
+      
+      try {
+        data = JSON.parse(responseText)
+      } catch (parseError) {
+        console.error("Failed to parse response:", parseError)
+        console.error("Response text:", responseText)
+        throw new Error(`Server returned an invalid response. Status: ${response.status}`)
       }
 
-      setSuccessMessage("Guest updated successfully!")
-      setTimeout(() => setSuccessMessage(null), 3000)
+      // Check if response indicates an error
+      if (!response.ok || data.error) {
+        const errorMessage = data.error || data.details || `Failed to update guest. Status: ${response.status}`
+        console.error("Update error response:", data, "Status:", response.status)
+        throw new Error(errorMessage)
+      }
+
+      // Show appropriate success message
+      if (nameChanged) {
+        setSuccessMessage(`Guest updated successfully! Name changed from "${originalName}" to "${newName}".`)
+      } else {
+        setSuccessMessage("Guest updated successfully!")
+      }
+      
+      setTimeout(() => setSuccessMessage(null), 5000)
       setEditingGuest(null)
-      setFormData({ Name: "", Email: "", RSVP: "", Message: "" })
+      setEditModalOpen(false)
+      setFormData({ Name: "", Email: "", RSVP: "", Guest: "", Message: "" })
       await fetchGuests()
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error updating guest:", error)
-      setError("Failed to update guest")
-      setTimeout(() => setError(null), 3000)
+      const errorMessage = error?.message || "Failed to update guest. Please check the console for details."
+      setError(errorMessage)
+      setTimeout(() => setError(null), 7000)
     } finally {
       setIsLoading(false)
     }
@@ -385,38 +453,47 @@ export default function DashboardPage() {
       Name: guest.Name,
       Email: guest.Email && guest.Email !== "Pending" ? guest.Email : "",
       RSVP: guest.RSVP || "",
+      Guest: guest.Guest || "1",
       Message: guest.Message || "",
     })
     setShowAddForm(false)
+    setEditModalOpen(true)
   }
 
   const handleCancel = () => {
     setShowAddForm(false)
+    setShowAddGuestModal(false)
     setEditingGuest(null)
-    setFormData({ Name: "", Email: "", RSVP: "", Message: "" })
+    setEditModalOpen(false)
+    setFormData({ Name: "", Email: "", RSVP: "", Guest: "", Message: "" })
   }
 
-  const handleAddRequestToGuestList = async (request: GuestRequest) => {
-    if (!confirm(`Add ${request.Name} to the guest list?`)) {
-      return
-    }
+  const handleAddRequestToGuestListClick = (request: GuestRequest) => {
+    setRequestToAdd(request)
+    setShowAddToGuestListModal(true)
+  }
+
+  const handleConfirmAddToGuestList = async () => {
+    if (!requestToAdd) return
 
     setIsLoading(true)
     setError(null)
     setSuccessMessage(null)
+    setShowAddToGuestListModal(false)
 
     try {
-      // Add to guest list
+      // Add to guest list with Message empty and RSVP empty (pending)
       const addResponse = await fetch("/api/guests", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          Name: request.Name,
-          Email: request.Email,
-          RSVP: "",
-          Message: request.Message,
+          Name: requestToAdd.Name,
+          Email: requestToAdd.Email,
+          RSVP: "", // Pending
+          Guest: requestToAdd.Guest || "1",
+          Message: "", // Reset message to empty
         }),
       })
 
@@ -430,15 +507,16 @@ export default function DashboardPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ Name: request.Name }),
+        body: JSON.stringify({ Name: requestToAdd.Name }),
       })
 
       if (!deleteResponse.ok) {
         throw new Error("Failed to remove from requests")
       }
 
-      setSuccessMessage(`${request.Name} added to guest list!`)
+      setSuccessMessage(`${requestToAdd.Name} added to guest list!`)
       setTimeout(() => setSuccessMessage(null), 3000)
+      setRequestToAdd(null)
       await fetchGuests()
       await fetchGuestRequests()
     } catch (error) {
@@ -448,6 +526,11 @@ export default function DashboardPage() {
     } finally {
       setIsLoading(false)
     }
+  }
+
+  const handleCancelAddToGuestList = () => {
+    setShowAddToGuestListModal(false)
+    setRequestToAdd(null)
   }
 
   const handleDeleteRequest = async (requestName: string) => {
@@ -480,66 +563,6 @@ export default function DashboardPage() {
     }
   }
 
-  const handleEditRequestClick = (request: GuestRequest) => {
-    setEditingRequest(request)
-    setRequestFormData({
-      Name: request.Name,
-      Email: request.Email && request.Email !== "Pending" ? request.Email : "",
-      Phone: request.Phone || "",
-      RSVP: request.RSVP || "",
-      Message: request.Message || "",
-    })
-  }
-
-  const handleUpdateRequest = async () => {
-    if (!editingRequest || !requestFormData.Name) {
-      setError("Name is required")
-      setTimeout(() => setError(null), 3000)
-      return
-    }
-
-    setIsLoading(true)
-    setError(null)
-    setSuccessMessage(null)
-
-    try {
-      const response = await fetch("/api/guest-requests", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          action: "update",
-          Name: requestFormData.Name,
-          Email: requestFormData.Email || "Pending",
-          Phone: requestFormData.Phone,
-          RSVP: requestFormData.RSVP,
-          Message: requestFormData.Message,
-        }),
-      })
-
-      if (!response.ok) {
-        throw new Error("Failed to update request")
-      }
-
-      setSuccessMessage("Request updated successfully!")
-      setTimeout(() => setSuccessMessage(null), 3000)
-      setEditingRequest(null)
-      setRequestFormData({ Name: "", Email: "", Phone: "", RSVP: "", Message: "" })
-      await fetchGuestRequests()
-    } catch (error) {
-      console.error("Error updating request:", error)
-      setError("Failed to update request")
-      setTimeout(() => setError(null), 3000)
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const handleCancelRequest = () => {
-    setEditingRequest(null)
-    setRequestFormData({ Name: "", Email: "", Phone: "", RSVP: "", Message: "" })
-  }
 
   // Entourage CRUD handlers
   const handleAddEntourage = async () => {
@@ -574,6 +597,7 @@ export default function DashboardPage() {
       setSuccessMessage("Entourage member added successfully!")
       setTimeout(() => setSuccessMessage(null), 3000)
       setShowEntourageForm(false)
+      setShowEntourageModal(false)
       setEntourageFormData({ Name: "", RoleCategory: "", RoleTitle: "", Email: "" })
       await fetchEntourage()
       window.dispatchEvent(new Event("entourageUpdated"))
@@ -620,6 +644,7 @@ export default function DashboardPage() {
       setSuccessMessage("Entourage member updated successfully!")
       setTimeout(() => setSuccessMessage(null), 3000)
       setShowEntourageForm(false)
+      setShowEntourageModal(false)
       setEditingEntourage(null)
       setEntourageFormData({ Name: "", RoleCategory: "", RoleTitle: "", Email: "" })
       await fetchEntourage()
@@ -672,10 +697,12 @@ export default function DashboardPage() {
       RoleTitle: member.RoleTitle || "",
       Email: member.Email && member.Email !== "Pending" ? member.Email : "",
     })
+    setShowEntourageModal(true)
   }
 
   const handleCancelEntourage = () => {
     setShowEntourageForm(false)
+    setShowEntourageModal(false)
     setEditingEntourage(null)
     setEntourageFormData({ Name: "", RoleCategory: "", RoleTitle: "", Email: "" })
   }
@@ -725,6 +752,7 @@ export default function DashboardPage() {
 
       setSuccessMessage("Principal sponsor added successfully!")
       setTimeout(() => setSuccessMessage(null), 3000)
+      setShowPrincipalSponsorModal(false)
       setShowPrincipalSponsorForm(false)
       setPrincipalSponsorFormData({ MalePrincipalSponsor: "", FemalePrincipalSponsor: "" })
       await fetchPrincipalSponsors()
@@ -767,6 +795,7 @@ export default function DashboardPage() {
 
       setSuccessMessage("Principal sponsor updated successfully!")
       setTimeout(() => setSuccessMessage(null), 3000)
+      setShowPrincipalSponsorModal(false)
       setShowPrincipalSponsorForm(false)
       setEditingPrincipalSponsor(null)
       setPrincipalSponsorFormData({ MalePrincipalSponsor: "", FemalePrincipalSponsor: "" })
@@ -816,9 +845,11 @@ export default function DashboardPage() {
       MalePrincipalSponsor: sponsor.MalePrincipalSponsor,
       FemalePrincipalSponsor: sponsor.FemalePrincipalSponsor || "",
     })
+    setShowPrincipalSponsorModal(true)
   }
 
   const handleCancelPrincipalSponsor = () => {
+    setShowPrincipalSponsorModal(false)
     setShowPrincipalSponsorForm(false)
     setEditingPrincipalSponsor(null)
     setPrincipalSponsorFormData({ MalePrincipalSponsor: "", FemalePrincipalSponsor: "" })
@@ -828,7 +859,12 @@ export default function DashboardPage() {
     const attending = guests.filter((g) => g.RSVP === "Yes").length
     const notAttending = guests.filter((g) => g.RSVP === "No").length
     const pending = guests.filter((g) => !g.RSVP || g.RSVP.trim() === "").length
-    return { attending, notAttending, pending, total: guests.length }
+    // Calculate total guests by summing the Guest column (number of guests per entry)
+    const totalGuests = guests.reduce((sum, guest) => {
+      const guestCount = parseInt(guest.Guest) || 1 // Default to 1 if empty or invalid
+      return sum + guestCount
+    }, 0)
+    return { attending, notAttending, pending, total: guests.length, totalGuests }
   }
 
   const stats = getRSVPStats()
@@ -932,9 +968,10 @@ export default function DashboardPage() {
           <div className="bg-white rounded-2xl p-6 shadow-md border border-[#B08981]/20">
             <div className="flex items-center justify-between mb-2">
               <Users className="h-6 w-6 sm:h-8 sm:w-8 text-[#B08981]" />
-              <span className="text-2xl sm:text-3xl font-bold text-[#666956]">{stats.total}</span>
+              <span className="text-2xl sm:text-3xl font-bold text-[#666956]">{stats.totalGuests}</span>
             </div>
             <p className="text-xs sm:text-sm text-[#666956]/70 font-sans">Total Guests</p>
+            <p className="text-xs text-[#666956]/50 font-sans mt-1">{stats.total} entries</p>
           </div>
 
           <div className="bg-green-50 rounded-2xl p-6 shadow-md border border-green-200">
@@ -1061,9 +1098,10 @@ export default function DashboardPage() {
             </div>
             <Button
               onClick={() => {
-                setShowAddForm(true)
+                setShowAddGuestModal(true)
                 setEditingGuest(null)
-                setFormData({ Name: "", Email: "", RSVP: "", Message: "" })
+                setEditModalOpen(false)
+                setFormData({ Name: "", Email: "", RSVP: "", Guest: "", Message: "" })
               }}
               className="bg-gradient-to-r from-[#666956] to-[#8D8E7C] hover:from-[#666956] hover:to-[#666956] text-white"
             >
@@ -1087,78 +1125,6 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {/* Add/Edit Form */}
-          {(showAddForm || editingGuest) && (
-            <div className="bg-[#FFE5E4]/50 rounded-xl p-6 border-2 border-[#B08981]/30 mb-4">
-              <h3 className="text-xl font-bold text-[#666956] mb-4 font-sans">
-                {editingGuest ? "Edit Guest" : "Add New Guest"}
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-[#666956] mb-2 font-sans">
-                    Name *
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.Name}
-                    onChange={(e) => setFormData({ ...formData, Name: e.target.value })}
-                    className="w-full px-4 py-2 border-2 border-[#666956]/20 focus:border-[#666956] rounded-xl text-sm font-sans placeholder:text-[#666956]/40 transition-all duration-300 focus:ring-4 focus:ring-[#666956]/10"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-[#666956] mb-2 font-sans">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    value={formData.Email}
-                    onChange={(e) => setFormData({ ...formData, Email: e.target.value })}
-                    className="w-full px-4 py-2 border-2 border-[#666956]/20 focus:border-[#666956] rounded-xl text-sm font-sans placeholder:text-[#666956]/40 transition-all duration-300 focus:ring-4 focus:ring-[#666956]/10"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-[#666956] mb-2 font-sans">
-                    RSVP Status *
-                  </label>
-                  <select
-                    value={formData.RSVP}
-                    onChange={(e) => setFormData({ ...formData, RSVP: e.target.value })}
-                    className="w-full px-4 py-2 border-2 border-[#666956]/20 focus:border-[#666956] rounded-xl text-sm font-sans bg-white transition-all duration-300 focus:ring-4 focus:ring-[#666956]/10"
-                    required
-                  >
-                    <option value="">Select status</option>
-                    <option value="Yes">Attending</option>
-                    <option value="No">Not Attending</option>
-                    <option value="Maybe">Maybe</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-[#666956] mb-2 font-sans">
-                    Message
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.Message}
-                    onChange={(e) => setFormData({ ...formData, Message: e.target.value })}
-                    className="w-full px-4 py-2 border-2 border-[#666956]/20 focus:border-[#666956] rounded-xl text-sm font-sans placeholder:text-[#666956]/40 transition-all duration-300 focus:ring-4 focus:ring-[#666956]/10"
-                  />
-                </div>
-              </div>
-              <div className="flex gap-2 mt-4">
-                <Button
-                  onClick={editingGuest ? handleUpdateGuest : handleAddGuest}
-                  disabled={isLoading}
-                  className="bg-gradient-to-r from-[#666956] to-[#8D8E7C] hover:from-[#666956] hover:to-[#666956] text-white"
-                >
-                  {isLoading ? <RefreshCw className="h-4 w-4 animate-spin" /> : "Save"}
-                </Button>
-                <Button onClick={handleCancel} variant="outline" size="sm">
-                  Cancel
-                </Button>
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Guest List */}
@@ -1170,6 +1136,12 @@ export default function DashboardPage() {
                   <th className="text-left px-6 py-4 text-sm font-bold text-[#666956] font-sans">Name</th>
                   <th className="text-left px-6 py-4 text-sm font-bold text-[#666956] font-sans">Email</th>
                   <th className="text-center px-6 py-4 text-sm font-bold text-[#666956] font-sans">RSVP</th>
+                  <th className="text-center px-6 py-4 text-sm font-bold text-[#666956] font-sans whitespace-nowrap">
+                    <span className="flex items-center justify-center gap-1">
+                      <Users className="h-4 w-4" />
+                      Guests
+                    </span>
+                  </th>
                   <th className="text-left px-6 py-4 text-sm font-bold text-[#666956] font-sans">Message</th>
                   <th className="text-center px-6 py-4 text-sm font-bold text-[#666956] font-sans">Actions</th>
                 </tr>
@@ -1177,7 +1149,7 @@ export default function DashboardPage() {
               <tbody className="divide-y divide-[#666956]/10">
                 {filteredGuests.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="px-6 py-12 text-center text-[#666956]/60 font-sans">
+                    <td colSpan={6} className="px-6 py-12 text-center text-[#666956]/60 font-sans">
                       {isLoading ? (
                         <div className="flex items-center justify-center gap-2">
                           <RefreshCw className="h-5 w-5 animate-spin" />
@@ -1220,7 +1192,14 @@ export default function DashboardPage() {
                           </span>
                         ) : null}
                       </td>
-                      <td className="px-6 py-4 text-[#666956]/70 font-sans max-w-xs truncate">
+                      <td className="px-6 py-4 text-center">
+                        <span className="inline-flex items-center justify-center px-3 py-1.5 bg-blue-100 text-blue-800 rounded-full text-sm font-bold min-w-[3.5rem] border border-blue-200">
+                          {guest?.Guest !== undefined && guest?.Guest !== null && guest?.Guest !== '' 
+                            ? (parseInt(String(guest.Guest)) || 1) 
+                            : 1}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-[#666956]/70 font-sans max-w-xs truncate" title={guest.Message || ""}>
                         {guest.Message || "-"}
                       </td>
                       <td className="px-6 py-4 text-center">
@@ -1291,73 +1270,6 @@ export default function DashboardPage() {
                 </div>
               )}
 
-              {/* Edit Form */}
-              {editingRequest && (
-                <div className="bg-[#FFE5E4]/50 rounded-xl p-6 border-2 border-[#B08981]/30 mb-4">
-                  <h3 className="text-xl font-bold text-[#666956] mb-4 font-sans">
-                    Edit Request
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-[#666956] mb-2 font-sans">
-                        Name *
-                      </label>
-                      <input
-                        type="text"
-                        value={requestFormData.Name}
-                        onChange={(e) => setRequestFormData({ ...requestFormData, Name: e.target.value })}
-                        className="w-full px-4 py-2 border-2 border-[#666956]/20 focus:border-[#666956] rounded-xl text-sm font-sans placeholder:text-[#666956]/40 transition-all duration-300 focus:ring-4 focus:ring-[#666956]/10"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-[#666956] mb-2 font-sans">
-                        Email *
-                      </label>
-                      <input
-                        type="email"
-                        value={requestFormData.Email}
-                        onChange={(e) => setRequestFormData({ ...requestFormData, Email: e.target.value })}
-                        className="w-full px-4 py-2 border-2 border-[#666956]/20 focus:border-[#666956] rounded-xl text-sm font-sans placeholder:text-[#666956]/40 transition-all duration-300 focus:ring-4 focus:ring-[#666956]/10"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-[#666956] mb-2 font-sans">
-                        Phone
-                      </label>
-                      <input
-                        type="tel"
-                        value={requestFormData.Phone}
-                        onChange={(e) => setRequestFormData({ ...requestFormData, Phone: e.target.value })}
-                        className="w-full px-4 py-2 border-2 border-[#666956]/20 focus:border-[#666956] rounded-xl text-sm font-sans placeholder:text-[#666956]/40 transition-all duration-300 focus:ring-4 focus:ring-[#666956]/10"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-[#666956] mb-2 font-sans">
-                        Message
-                      </label>
-                      <input
-                        type="text"
-                        value={requestFormData.Message}
-                        onChange={(e) => setRequestFormData({ ...requestFormData, Message: e.target.value })}
-                        className="w-full px-4 py-2 border-2 border-[#666956]/20 focus:border-[#666956] rounded-xl text-sm font-sans placeholder:text-[#666956]/40 transition-all duration-300 focus:ring-4 focus:ring-[#666956]/10"
-                      />
-                    </div>
-                  </div>
-                  <div className="flex gap-2 mt-4">
-                    <Button
-                      onClick={handleUpdateRequest}
-                      disabled={isLoading}
-                      className="bg-gradient-to-r from-[#666956] to-[#8D8E7C] hover:from-[#666956] hover:to-[#666956] text-white"
-                    >
-                      {isLoading ? <RefreshCw className="h-4 w-4 animate-spin" /> : "Save"}
-                    </Button>
-                    <Button onClick={handleCancelRequest} variant="outline" size="sm">
-                      Cancel
-                    </Button>
-                  </div>
-                </div>
-              )}
             </div>
 
             {/* Requests List */}
@@ -1369,6 +1281,12 @@ export default function DashboardPage() {
                       <th className="text-left px-6 py-4 text-sm font-bold text-[#666956] font-sans">Name</th>
                       <th className="text-left px-6 py-4 text-sm font-bold text-[#666956] font-sans">Email</th>
                       <th className="text-left px-6 py-4 text-sm font-bold text-[#666956] font-sans">Phone</th>
+                      <th className="text-center px-6 py-4 text-sm font-bold text-[#666956] font-sans whitespace-nowrap">
+                        <span className="flex items-center justify-center gap-1">
+                          <Users className="h-4 w-4" />
+                          Guests
+                        </span>
+                      </th>
                       <th className="text-left px-6 py-4 text-sm font-bold text-[#666956] font-sans">Message</th>
                       <th className="text-center px-6 py-4 text-sm font-bold text-[#666956] font-sans">Actions</th>
                     </tr>
@@ -1376,7 +1294,7 @@ export default function DashboardPage() {
                   <tbody className="divide-y divide-[#666956]/10">
                     {filteredRequests.length === 0 ? (
                       <tr>
-                        <td colSpan={5} className="px-6 py-12 text-center text-[#666956]/60 font-sans">
+                        <td colSpan={6} className="px-6 py-12 text-center text-[#666956]/60 font-sans">
                           {isLoading ? (
                             <div className="flex items-center justify-center gap-2">
                               <RefreshCw className="h-5 w-5 animate-spin" />
@@ -1397,24 +1315,25 @@ export default function DashboardPage() {
                           <td className="px-6 py-4 text-[#666956]/70 font-sans">
                             {request.Phone || "-"}
                           </td>
+                          <td className="px-6 py-4 text-center">
+                            <span className="inline-flex items-center justify-center px-3 py-1.5 bg-blue-100 text-blue-800 rounded-full text-sm font-bold min-w-[3.5rem] border border-blue-200">
+                              {request?.Guest !== undefined && request?.Guest !== null && request?.Guest !== '' 
+                                ? (parseInt(String(request.Guest)) || 1) 
+                                : 1}
+                            </span>
+                          </td>
                           <td className="px-6 py-4 text-[#666956]/70 font-sans max-w-xs truncate">
                             {request.Message || "-"}
                           </td>
                           <td className="px-6 py-4 text-center">
                             <div className="flex items-center justify-center gap-2">
                               <button
-                                onClick={() => handleAddRequestToGuestList(request)}
-                                className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                                onClick={() => handleAddRequestToGuestListClick(request)}
+                                className="px-4 py-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-lg transition-colors font-semibold text-sm flex items-center gap-2 shadow-md hover:shadow-lg"
                                 title="Add to guest list"
                               >
                                 <UserCheck className="h-4 w-4" />
-                              </button>
-                              <button
-                                onClick={() => handleEditRequestClick(request)}
-                                className="p-2 text-[#B08981] hover:bg-[#B08981]/10 rounded-lg transition-colors"
-                                title="Edit request"
-                              >
-                                <Edit2 className="h-4 w-4" />
+                                Add to Guest List
                               </button>
                               <button
                                 onClick={() => {
@@ -1460,9 +1379,10 @@ export default function DashboardPage() {
                 </div>
                 <Button
                   onClick={() => {
-                    setShowEntourageForm(true)
+                    setShowEntourageForm(false)
                     setEditingEntourage(null)
                     setEntourageFormData({ Name: "", RoleCategory: "", RoleTitle: "", Email: "" })
+                    setShowEntourageModal(true)
                   }}
                 className="bg-gradient-to-r from-[#666956] to-[#8D8E7C] hover:from-[#666956] hover:to-[#666956] text-white"
                 >
@@ -1486,76 +1406,7 @@ export default function DashboardPage() {
                 </div>
               )}
 
-              {/* Add/Edit Form */}
-              {(showEntourageForm || editingEntourage) && (
-                <div className="bg-[#FFE5E4]/50 rounded-xl p-6 border-2 border-[#B08981]/30 mb-4">
-                  <h3 className="text-xl font-bold text-[#666956] mb-4 font-sans">
-                    {editingEntourage ? "Edit Entourage Member" : "Add New Entourage Member"}
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-[#666956] mb-2 font-sans">
-                        Name *
-                      </label>
-                      <input
-                        type="text"
-                        value={entourageFormData.Name}
-                        onChange={(e) => setEntourageFormData({ ...entourageFormData, Name: e.target.value })}
-                        className="w-full px-4 py-2 border-2 border-[#666956]/20 focus:border-[#666956] rounded-xl text-sm font-sans placeholder:text-[#666956]/40 transition-all duration-300 focus:ring-4 focus:ring-[#666956]/10"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-[#666956] mb-2 font-sans">
-                        Role Category
-                      </label>
-                      <input
-                        type="text"
-                        value={entourageFormData.RoleCategory}
-                        onChange={(e) => setEntourageFormData({ ...entourageFormData, RoleCategory: e.target.value })}
-                        placeholder="e.g., Wedding Party, Family"
-                        className="w-full px-4 py-2 border-2 border-[#666956]/20 focus:border-[#666956] rounded-xl text-sm font-sans placeholder:text-[#666956]/40 transition-all duration-300 focus:ring-4 focus:ring-[#666956]/10"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-[#666956] mb-2 font-sans">
-                        Role Title
-                      </label>
-                      <input
-                        type="text"
-                        value={entourageFormData.RoleTitle}
-                        onChange={(e) => setEntourageFormData({ ...entourageFormData, RoleTitle: e.target.value })}
-                        placeholder="e.g., Best Man, Maid of Honor"
-                        className="w-full px-4 py-2 border-2 border-[#666956]/20 focus:border-[#666956] rounded-xl text-sm font-sans placeholder:text-[#666956]/40 transition-all duration-300 focus:ring-4 focus:ring-[#666956]/10"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-[#666956] mb-2 font-sans">
-                        Email
-                      </label>
-                      <input
-                        type="email"
-                        value={entourageFormData.Email}
-                        onChange={(e) => setEntourageFormData({ ...entourageFormData, Email: e.target.value })}
-                        placeholder="email@example.com"
-                        className="w-full px-4 py-2 border-2 border-[#666956]/20 focus:border-[#666956] rounded-xl text-sm font-sans placeholder:text-[#666956]/40 transition-all duration-300 focus:ring-4 focus:ring-[#666956]/10"
-                      />
-                    </div>
-                  </div>
-                  <div className="flex gap-2 mt-4">
-                    <Button
-                      onClick={editingEntourage ? handleUpdateEntourage : handleAddEntourage}
-                      disabled={isLoading}
-                      className="bg-gradient-to-r from-[#666956] to-[#8D8E7C] hover:from-[#666956] hover:to-[#666956] text-white"
-                    >
-                      {isLoading ? <RefreshCw className="h-4 w-4 animate-spin" /> : (editingEntourage ? "Update" : "Add")}
-                    </Button>
-                    <Button onClick={handleCancelEntourage} variant="outline" size="sm">
-                      Cancel
-                    </Button>
-                  </div>
-                </div>
-              )}
+              {/* Add/Edit Entourage Modal handled below */}
             </div>
 
             {/* Entourage List */}
@@ -1651,9 +1502,9 @@ export default function DashboardPage() {
                 </div>
                 <Button
                   onClick={() => {
-                    setShowPrincipalSponsorForm(true)
                     setEditingPrincipalSponsor(null)
                     setPrincipalSponsorFormData({ MalePrincipalSponsor: "", FemalePrincipalSponsor: "" })
+                    setShowPrincipalSponsorModal(true)
                   }}
                 className="bg-gradient-to-r from-[#666956] to-[#8D8E7C] hover:from-[#666956] hover:to-[#666956] text-white"
                 >
@@ -1677,51 +1528,6 @@ export default function DashboardPage() {
                 </div>
               )}
 
-              {/* Add/Edit Form */}
-              {(showPrincipalSponsorForm || editingPrincipalSponsor) && (
-                <div className="bg-[#FFE5E4]/50 rounded-xl p-6 border-2 border-[#B08981]/30 mb-4">
-                  <h3 className="text-xl font-bold text-[#666956] mb-4 font-sans">
-                    {editingPrincipalSponsor ? "Edit Principal Sponsors" : "Add New Principal Sponsors"}
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-[#666956] mb-2 font-sans">
-                        Male Principal Sponsor *
-                      </label>
-                      <input
-                        type="text"
-                        value={principalSponsorFormData.MalePrincipalSponsor}
-                        onChange={(e) => setPrincipalSponsorFormData({ ...principalSponsorFormData, MalePrincipalSponsor: e.target.value })}
-                        className="w-full px-4 py-2 border-2 border-[#666956]/20 focus:border-[#666956] rounded-xl text-sm font-sans placeholder:text-[#666956]/40 transition-all duration-300 focus:ring-4 focus:ring-[#666956]/10"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-[#666956] mb-2 font-sans">
-                        Female Principal Sponsor
-                      </label>
-                      <input
-                        type="text"
-                        value={principalSponsorFormData.FemalePrincipalSponsor}
-                        onChange={(e) => setPrincipalSponsorFormData({ ...principalSponsorFormData, FemalePrincipalSponsor: e.target.value })}
-                        className="w-full px-4 py-2 border-2 border-[#666956]/20 focus:border-[#666956] rounded-xl text-sm font-sans placeholder:text-[#666956]/40 transition-all duration-300 focus:ring-4 focus:ring-[#666956]/10"
-                      />
-                    </div>
-                  </div>
-                  <div className="flex gap-2 mt-4">
-                    <Button
-                      onClick={editingPrincipalSponsor ? handleUpdatePrincipalSponsor : handleAddPrincipalSponsor}
-                      disabled={isLoading}
-                      className="bg-gradient-to-r from-[#666956] to-[#8D8E7C] hover:from-[#666956] hover:to-[#666956] text-white"
-                    >
-                      {isLoading ? <RefreshCw className="h-4 w-4 animate-spin" /> : (editingPrincipalSponsor ? "Update" : "Add")}
-                    </Button>
-                    <Button onClick={handleCancelPrincipalSponsor} variant="outline" size="sm">
-                      Cancel
-                    </Button>
-                  </div>
-                </div>
-              )}
             </div>
 
             {/* PrincipalSponsor List */}
@@ -1789,6 +1595,68 @@ export default function DashboardPage() {
           </>
         )}
       </div>
+      {/* Add Guest Modal */}
+      <AddGuestModal
+        open={showAddGuestModal}
+        formData={formData}
+        setFormData={setFormData}
+        isLoading={isLoading}
+        onClose={() => {
+          setShowAddGuestModal(false)
+          setFormData({ Name: "", Email: "", RSVP: "", Guest: "", Message: "" })
+        }}
+        onSave={handleAddGuest}
+      />
+
+      {/* Edit Guest Modal */}
+      <EditGuestModal
+        open={editModalOpen}
+        guest={editingGuest}
+        formData={formData}
+        setFormData={setFormData}
+        isLoading={isLoading}
+        onClose={() => {
+          setEditModalOpen(false)
+          setEditingGuest(null)
+          setFormData({ Name: "", Email: "", RSVP: "", Guest: "", Message: "" })
+        }}
+        onSave={handleUpdateGuest}
+      />
+
+      {/* Entourage Add/Edit Modal */}
+      <EntourageModal
+        open={showEntourageModal}
+        editing={!!editingEntourage}
+        editingMember={editingEntourage}
+        formData={entourageFormData}
+        setFormData={setEntourageFormData}
+        isLoading={isLoading}
+        entourage={entourage}
+        onClose={handleCancelEntourage}
+        onSave={editingEntourage ? handleUpdateEntourage : handleAddEntourage}
+      />
+
+      {/* Principal Sponsor Add/Edit Modal */}
+      <PrincipalSponsorModal
+        open={showPrincipalSponsorModal}
+        editing={!!editingPrincipalSponsor}
+        editingSponsor={editingPrincipalSponsor}
+        formData={principalSponsorFormData}
+        setFormData={setPrincipalSponsorFormData}
+        isLoading={isLoading}
+        onClose={handleCancelPrincipalSponsor}
+        onSave={editingPrincipalSponsor ? handleUpdatePrincipalSponsor : handleAddPrincipalSponsor}
+      />
+
+      {/* Add to Guest List Confirmation Modal */}
+      <AddToGuestListModal
+        open={showAddToGuestListModal}
+        request={requestToAdd}
+        isLoading={isLoading}
+        onCancel={handleCancelAddToGuestList}
+        onConfirm={handleConfirmAddToGuestList}
+      />
+
       {/* Global Confirm Modal */}
       <ConfirmModal
         open={confirmOpen}
@@ -1804,22 +1672,582 @@ export default function DashboardPage() {
   )
 }
 
+// Add to Guest List Confirmation Modal Component
+function AddToGuestListModal({
+  open,
+  request,
+  isLoading,
+  onCancel,
+  onConfirm,
+}: {
+  open: boolean
+  request: GuestRequest | null
+  isLoading: boolean
+  onCancel: () => void
+  onConfirm: () => void
+}) {
+  if (!open || !request) return null
+
+  const guestCount = request.Guest && request.Guest !== '' ? (parseInt(String(request.Guest)) || 1) : 1
+
+  return (
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl border border-[#B08981]/30">
+        <div className="sticky top-0 bg-gradient-to-r from-[#B08981]/10 to-[#EFBFBB]/10 px-6 py-4 border-b border-[#B08981]/20 rounded-t-2xl">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xl font-bold text-[#666956] font-sans">Add to Guest List</h3>
+            <button
+              onClick={onCancel}
+              className="p-2 hover:bg-white/50 rounded-lg transition-colors text-[#666956]/70 hover:text-[#666956]"
+            >
+              <XCircle className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+        <div className="p-6">
+          <div className="mb-6">
+            <p className="text-base text-[#666956] font-sans leading-relaxed">
+              <span className="font-bold text-lg">{request.Name}</span> is requesting to join your wedding with a total of{' '}
+              <span className="font-bold text-lg text-blue-600">{guestCount}</span>{' '}
+              {guestCount === 1 ? 'guest' : 'guests'}.
+            </p>
+          </div>
+          
+          <div className="bg-[#FFE5E4]/30 rounded-xl p-4 mb-6 border border-[#B08981]/20">
+            <p className="text-sm font-semibold text-[#666956] mb-2 font-sans">Request Details:</p>
+            <div className="space-y-2 text-sm text-[#666956]/80 font-sans">
+              <div><span className="font-medium">Email:</span> {request.Email || "-"}</div>
+              {request.Phone && <div><span className="font-medium">Phone:</span> {request.Phone}</div>}
+              <div><span className="font-medium">Guests:</span> {guestCount}</div>
+              {request.Message && (
+                <div className="mt-2 pt-2 border-t border-[#B08981]/20">
+                  <span className="font-medium">Message:</span>
+                  <p className="italic mt-1">{request.Message}</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <p className="text-sm text-[#666956]/70 mb-6 font-sans">
+            Do you want to include this to guest list?
+          </p>
+
+          <div className="flex gap-3">
+            <Button
+              onClick={onConfirm}
+              disabled={isLoading}
+              className="flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white disabled:opacity-50"
+            >
+              {isLoading ? (
+                <>
+                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                  Adding...
+                </>
+              ) : (
+                <>
+                  <UserCheck className="h-4 w-4 mr-2" />
+                  Yes, Add to Guest List
+                </>
+              )}
+            </Button>
+            <Button onClick={onCancel} variant="outline" className="px-6" disabled={isLoading}>
+              Cancel
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Entourage Modal Component (Add/Edit)
+function EntourageModal({
+  open,
+  editing,
+  editingMember,
+  formData,
+  setFormData,
+  isLoading,
+  entourage,
+  onClose,
+  onSave,
+}: {
+  open: boolean
+  editing: boolean
+  editingMember: Entourage | null
+  formData: { Name: string; RoleCategory: string; RoleTitle: string; Email: string }
+  setFormData: (data: { Name: string; RoleCategory: string; RoleTitle: string; Email: string }) => void
+  isLoading: boolean
+  entourage: Entourage[]
+  onClose: () => void
+  onSave: () => void
+}) {
+  if (!open) return null
+
+  // Extract unique Role Categories from existing entourage
+  const uniqueRoleCategories = Array.from(
+    new Set(
+      entourage
+        .map((member) => member.RoleCategory?.trim())
+        .filter((category) => category && category !== "")
+    )
+  ).sort()
+
+  // Extract unique Role Titles based on selected Role Category
+  const uniqueRoleTitles = formData.RoleCategory
+    ? Array.from(
+        new Set(
+          entourage
+            .filter((member) => member.RoleCategory?.trim() === formData.RoleCategory.trim())
+            .map((member) => member.RoleTitle?.trim())
+            .filter((title) => title && title !== "")
+        )
+      ).sort()
+    : []
+
+  // Count members with the same Role Category (excluding current member if editing)
+  const currentRoleCategoryCount = formData.RoleCategory
+    ? entourage.filter((member) => {
+        const memberCategory = member.RoleCategory?.trim().toLowerCase() || ""
+        const formCategory = formData.RoleCategory.trim().toLowerCase()
+        // When editing, exclude the original member being edited
+        if (editing && editingMember && member.Name === editingMember.Name) return false
+        return memberCategory === formCategory && memberCategory !== ""
+      }).length
+    : 0
+
+  // Count members with the same Role Title (excluding current member if editing)
+  const currentRoleTitleCount = formData.RoleTitle
+    ? entourage.filter((member) => {
+        const memberTitle = member.RoleTitle?.trim().toLowerCase() || ""
+        const formTitle = formData.RoleTitle.trim().toLowerCase()
+        // When editing, exclude the original member being edited
+        if (editing && editingMember && member.Name === editingMember.Name) return false
+        return memberTitle === formTitle && memberTitle !== ""
+      }).length
+    : 0
+
+  return (
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+      <div className="w-full max-w-xl bg-white rounded-2xl shadow-2xl border border-[#B08981]/30 max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-gradient-to-r from-[#B08981]/10 to-[#EFBFBB]/10 px-6 py-4 border-b border-[#B08981]/20 rounded-t-2xl">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xl font-bold text-[#666956] font-sans">{editing ? 'Edit Entourage Member' : 'Add New Entourage Member'}</h3>
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-white/50 rounded-lg transition-colors text-[#666956]/70 hover:text-[#666956]"
+            >
+              <XCircle className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+        <div className="p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-[#666956] mb-2 font-sans">Name *</label>
+              <input
+                type="text"
+                value={formData.Name}
+                onChange={(e) => setFormData({ ...formData, Name: e.target.value })}
+                className="w-full px-4 py-2 border-2 border-[#666956]/20 focus:border-[#666956] rounded-xl text-sm font-sans placeholder:text-[#666956]/40 transition-all duration-300 focus:ring-4 focus:ring-[#666956]/10"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[#666956] mb-2 font-sans">
+                Role Category
+                {currentRoleCategoryCount > 0 && (
+                  <span className="text-xs text-gray-500 font-normal ml-2">({currentRoleCategoryCount} existing)</span>
+                )}
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  list="role-category-options"
+                  value={formData.RoleCategory}
+                  onChange={(e) => setFormData({ ...formData, RoleCategory: e.target.value, RoleTitle: "" })}
+                  placeholder="e.g., Wedding Party, Family"
+                  className="w-full px-4 py-2 border-2 border-[#666956]/20 focus:border-[#666956] rounded-xl text-sm font-sans placeholder:text-[#666956]/40 transition-all duration-300 focus:ring-4 focus:ring-[#666956]/10"
+                />
+                <datalist id="role-category-options">
+                  {uniqueRoleCategories.map((category, index) => (
+                    <option key={index} value={category} />
+                  ))}
+                </datalist>
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[#666956] mb-2 font-sans">
+                Role Title
+                {currentRoleTitleCount > 0 && (
+                  <span className="text-xs text-gray-500 font-normal ml-2">({currentRoleTitleCount} existing)</span>
+                )}
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  list="role-title-options"
+                  value={formData.RoleTitle}
+                  onChange={(e) => setFormData({ ...formData, RoleTitle: e.target.value })}
+                  placeholder="e.g., Best Man, Maid of Honor"
+                  className="w-full px-4 py-2 border-2 border-[#666956]/20 focus:border-[#666956] rounded-xl text-sm font-sans placeholder:text-[#666956]/40 transition-all duration-300 focus:ring-4 focus:ring-[#666956]/10"
+                />
+                {formData.RoleCategory && uniqueRoleTitles.length > 0 && (
+                  <datalist id="role-title-options">
+                    {uniqueRoleTitles.map((title, index) => (
+                      <option key={index} value={title} />
+                    ))}
+                  </datalist>
+                )}
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[#666956] mb-2 font-sans">Email</label>
+              <input
+                type="email"
+                value={formData.Email}
+                onChange={(e) => setFormData({ ...formData, Email: e.target.value })}
+                placeholder="email@example.com"
+                className="w-full px-4 py-2 border-2 border-[#666956]/20 focus:border-[#666956] rounded-xl text-sm font-sans placeholder:text-[#666956]/40 transition-all duration-300 focus:ring-4 focus:ring-[#666956]/10"
+              />
+            </div>
+          </div>
+          <div className="flex gap-3 mt-6">
+            <Button
+              onClick={onSave}
+              disabled={isLoading}
+              className="flex-1 bg-gradient-to-r from-[#666956] to-[#8D8E7C] hover:from-[#666956] hover:to-[#666956] text-white"
+            >
+              {isLoading ? (
+                <>
+                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                editing ? 'Update' : 'Add'
+              )}
+            </Button>
+            <Button onClick={onClose} variant="outline" className="px-6">Cancel</Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Principal Sponsor Modal Component (Add/Edit)
+function PrincipalSponsorModal({
+  open,
+  editing,
+  editingSponsor,
+  formData,
+  setFormData,
+  isLoading,
+  onClose,
+  onSave,
+}: {
+  open: boolean
+  editing: boolean
+  editingSponsor: PrincipalSponsor | null
+  formData: { MalePrincipalSponsor: string; FemalePrincipalSponsor: string }
+  setFormData: (data: { MalePrincipalSponsor: string; FemalePrincipalSponsor: string }) => void
+  isLoading: boolean
+  onClose: () => void
+  onSave: () => void
+}) {
+  if (!open) return null
+
+  return (
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+      <div className="w-full max-w-xl bg-white rounded-2xl shadow-2xl border border-[#B08981]/30 max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-gradient-to-r from-[#B08981]/10 to-[#EFBFBB]/10 px-6 py-4 border-b border-[#B08981]/20 rounded-t-2xl">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xl font-bold text-[#666956] font-sans">
+              {editing ? "Edit Principal Sponsors" : "Add New Principal Sponsors"}
+            </h3>
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-white/50 rounded-lg transition-colors text-[#666956]/70 hover:text-[#666956]"
+            >
+              <XCircle className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+        <div className="p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-[#666956] mb-2 font-sans">
+                Male Principal Sponsor *
+              </label>
+              <input
+                type="text"
+                value={formData.MalePrincipalSponsor}
+                onChange={(e) => setFormData({ ...formData, MalePrincipalSponsor: e.target.value })}
+                className="w-full px-4 py-2 border-2 border-[#666956]/20 focus:border-[#666956] rounded-xl text-sm font-sans placeholder:text-[#666956]/40 transition-all duration-300 focus:ring-4 focus:ring-[#666956]/10"
+                placeholder="Enter male principal sponsor name"
+                required
+                autoFocus
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[#666956] mb-2 font-sans">
+                Female Principal Sponsor
+              </label>
+              <input
+                type="text"
+                value={formData.FemalePrincipalSponsor}
+                onChange={(e) => setFormData({ ...formData, FemalePrincipalSponsor: e.target.value })}
+                className="w-full px-4 py-2 border-2 border-[#666956]/20 focus:border-[#666956] rounded-xl text-sm font-sans placeholder:text-[#666956]/40 transition-all duration-300 focus:ring-4 focus:ring-[#666956]/10"
+                placeholder="Enter female principal sponsor name (optional)"
+              />
+            </div>
+          </div>
+          <div className="flex gap-3 mt-6">
+            <Button
+              onClick={onSave}
+              disabled={isLoading || !formData.MalePrincipalSponsor.trim()}
+              className="flex-1 bg-gradient-to-r from-[#666956] to-[#8D8E7C] hover:from-[#666956] hover:to-[#666956] text-white disabled:opacity-50"
+            >
+              {isLoading ? (
+                <>
+                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                editing ? "Update" : "Add"
+              )}
+            </Button>
+            <Button onClick={onClose} variant="outline" className="px-6" disabled={isLoading}>
+              Cancel
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Add Guest Modal Component - Only Name Input
+function AddGuestModal({
+  open,
+  formData,
+  setFormData,
+  isLoading,
+  onClose,
+  onSave,
+}: {
+  open: boolean
+  formData: { Name: string; Email: string; RSVP: string; Guest: string; Message: string }
+  setFormData: (data: { Name: string; Email: string; RSVP: string; Guest: string; Message: string }) => void
+  isLoading: boolean
+  onClose: () => void
+  onSave: () => void
+}) {
+  if (!open) return null
+
+  return (
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl border border-[#B08981]/30">
+        <div className="sticky top-0 bg-gradient-to-r from-[#B08981]/10 to-[#EFBFBB]/10 px-6 py-4 border-b border-[#B08981]/20 rounded-t-2xl">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xl font-bold text-[#666956] font-sans">Add New Guest</h3>
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-white/50 rounded-lg transition-colors text-[#666956]/70 hover:text-[#666956]"
+            >
+              <XCircle className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+        <div className="p-6">
+          <p className="text-sm text-[#666956]/70 mb-4 font-sans leading-relaxed">
+            Just type in your guest's name to add them to your guest list. After they are added, they'll be able to visit your wedding website, search for their name, and complete their RSVP — including their contact details, attendance confirmation, and the number of guests they'll be bringing.
+          </p>
+          <div>
+            <label className="block text-sm font-medium text-[#666956] mb-2 font-sans">
+              Guest Name *
+            </label>
+            <input
+              type="text"
+              value={formData.Name}
+              onChange={(e) => setFormData({ ...formData, Name: e.target.value })}
+              className="w-full px-4 py-3 border-2 border-[#666956]/20 focus:border-[#666956] rounded-xl text-sm font-sans placeholder:text-[#666956]/40 transition-all duration-300 focus:ring-4 focus:ring-[#666956]/10"
+              placeholder="Enter guest name"
+              required
+              autoFocus
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && formData.Name.trim()) {
+                  onSave()
+                }
+              }}
+            />
+          </div>
+          <div className="flex gap-3 mt-6">
+            <Button
+              onClick={onSave}
+              disabled={isLoading || !formData.Name.trim()}
+              className="flex-1 bg-gradient-to-r from-[#666956] to-[#8D8E7C] hover:from-[#666956] hover:to-[#666956] text-white disabled:opacity-50"
+            >
+              {isLoading ? (
+                <>
+                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                  Adding...
+                </>
+              ) : (
+                "Add Guest"
+              )}
+            </Button>
+            <Button onClick={onClose} variant="outline" className="px-6">
+              Cancel
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Edit Guest Modal Component
+function EditGuestModal({
+  open,
+  guest,
+  formData,
+  setFormData,
+  isLoading,
+  onClose,
+  onSave,
+}: {
+  open: boolean
+  guest: Guest | null
+  formData: { Name: string; Email: string; RSVP: string; Guest: string; Message: string }
+  setFormData: (data: { Name: string; Email: string; RSVP: string; Guest: string; Message: string }) => void
+  isLoading: boolean
+  onClose: () => void
+  onSave: () => void
+}) {
+  if (!open || !guest) return null
+
+  return (
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+      <div className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-[#B08981]/30 max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-gradient-to-r from-[#B08981]/10 to-[#EFBFBB]/10 px-6 py-4 border-b border-[#B08981]/20 rounded-t-2xl">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xl font-bold text-[#666956] font-sans">Edit Guest</h3>
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-white/50 rounded-lg transition-colors text-[#666956]/70 hover:text-[#666956]"
+            >
+              <XCircle className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+        <div className="p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-[#666956] mb-2 font-sans">
+                Name *
+              </label>
+              <input
+                type="text"
+                value={formData.Name}
+                onChange={(e) => setFormData({ ...formData, Name: e.target.value })}
+                className="w-full px-4 py-2 border-2 border-[#666956]/20 focus:border-[#666956] rounded-xl text-sm font-sans placeholder:text-[#666956]/40 transition-all duration-300 focus:ring-4 focus:ring-[#666956]/10"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[#666956] mb-2 font-sans">
+                Email
+              </label>
+              <input
+                type="email"
+                value={formData.Email}
+                onChange={(e) => setFormData({ ...formData, Email: e.target.value })}
+                className="w-full px-4 py-2 border-2 border-[#666956]/20 focus:border-[#666956] rounded-xl text-sm font-sans placeholder:text-[#666956]/40 transition-all duration-300 focus:ring-4 focus:ring-[#666956]/10"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[#666956] mb-2 font-sans">
+                RSVP Status *
+              </label>
+              <select
+                value={formData.RSVP}
+                onChange={(e) => setFormData({ ...formData, RSVP: e.target.value })}
+                className="w-full px-4 py-2 border-2 border-[#666956]/20 focus:border-[#666956] rounded-xl text-sm font-sans bg-white transition-all duration-300 focus:ring-4 focus:ring-[#666956]/10"
+                required
+              >
+                <option value="">Select status</option>
+                <option value="Yes">Attending</option>
+                <option value="No">Not Attending</option>
+                <option value="Maybe">Maybe</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[#666956] mb-2 font-sans">
+                Number of Guests *
+              </label>
+              <input
+                type="number"
+                min="1"
+                value={formData.Guest || "1"}
+                onChange={(e) => setFormData({ ...formData, Guest: e.target.value || "1" })}
+                className="w-full px-4 py-2 border-2 border-[#666956]/20 focus:border-[#666956] rounded-xl text-sm font-sans placeholder:text-[#666956]/40 transition-all duration-300 focus:ring-4 focus:ring-[#666956]/10"
+                placeholder="1"
+                required
+              />
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-[#666956] mb-2 font-sans">
+                Message
+              </label>
+              <textarea
+                value={formData.Message}
+                onChange={(e) => setFormData({ ...formData, Message: e.target.value })}
+                className="w-full px-4 py-2 border-2 border-[#666956]/20 focus:border-[#666956] rounded-xl text-sm font-sans placeholder:text-[#666956]/40 transition-all duration-300 focus:ring-4 focus:ring-[#666956]/10"
+                rows={3}
+              />
+            </div>
+          </div>
+          <div className="flex gap-3 mt-6">
+            <Button
+              onClick={onSave}
+              disabled={isLoading}
+              className="flex-1 bg-gradient-to-r from-[#666956] to-[#8D8E7C] hover:from-[#666956] hover:to-[#666956] text-white"
+            >
+              {isLoading ? (
+                <>
+                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                "Save Changes"
+              )}
+            </Button>
+            <Button onClick={onClose} variant="outline" className="px-6">
+              Cancel
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 // Confirm Modal Component (inline for simplicity)
 function ConfirmModal({ open, title, message, onCancel, onConfirm }: { open: boolean; title: string; message: string; onCancel: () => void; onConfirm: () => void }) {
   if (!open) return null
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/50">
-      <div className="w-full max-w-sm bg-white rounded-2xl shadow-2xl border border-[#BB8A3D]/30">
-        <div className="px-5 py-4 border-b border-[#BB8A3D]/20">
-          <h3 className="text-base sm:text-lg font-bold text-[#402921]">{title}</h3>
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+      <div className="w-full max-w-sm bg-white rounded-2xl shadow-2xl border border-[#B08981]/30">
+        <div className="px-5 py-4 border-b border-[#B08981]/20">
+          <h3 className="text-base sm:text-lg font-bold text-[#666956]">{title}</h3>
         </div>
-        <div className="px-5 py-4 text-sm sm:text-base text-[#402921]/80">
+        <div className="px-5 py-4 text-sm sm:text-base text-[#666956]/80">
           {message}
         </div>
-        <div className="px-5 py-4 flex justify-end gap-2 border-t border-[#BB8A3D]/20">
-          <button onClick={onCancel} className="px-3 py-2 text-sm rounded-lg border border-[#402921]/20 text-[#402921] hover:bg-[#FFF6E7]">Cancel</button>
-          <button onClick={onConfirm} className="px-3 py-2 text-sm rounded-lg bg-red-600 text-white hover:bg-red-700">Delete</button>
+        <div className="px-5 py-4 flex justify-end gap-2 border-t border-[#B08981]/20">
+          <button onClick={onCancel} className="px-4 py-2 text-sm rounded-lg border border-[#666956]/20 text-[#666956] hover:bg-[#FFE5E4]/30 transition-colors">Cancel</button>
+          <button onClick={onConfirm} className="px-4 py-2 text-sm rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors">Delete</button>
         </div>
       </div>
     </div>

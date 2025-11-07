@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 
 // You'll need to replace this with your GuestWish Google Apps Script URL
-const GUEST_WISH_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwBQOsr2ZC1mXXPQ6mqGIF82549v-TAuoFyjGJrP5mYHnaHDxLNivzJLrDBUm43P1M/exec'
+const GUEST_WISH_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxj3isVtMz0jDyD1HHgT0s8iulIJ9EXaTCgjoqqiw567XRcac73jIwKndmzWVZOpmYF/exec'
 
 // Guest Request interface for WishGuest sheet
 export interface GuestRequest {
@@ -9,6 +9,7 @@ export interface GuestRequest {
   Email: string
   Phone: string
   RSVP: string
+  Guest: string
   Message: string
 }
 
@@ -27,7 +28,31 @@ export async function GET() {
     }
 
     const data = await response.json()
-    return NextResponse.json(data, { status: 200 })
+
+    // Helper to safely coerce any value to a trimmed string
+    const safeString = (value: any): string => {
+      if (value === null || value === undefined) return ''
+      if (typeof value === 'number') return String(value)
+      if (typeof value === 'string') return value.trim()
+      return String(value).trim()
+    }
+
+    // Normalize data - ensure consistent keys and Guest is preserved (including numbers)
+    const normalizedData = Array.isArray(data)
+      ? data.map((request: any) => {
+          const guestRaw = request?.Guest ?? request?.guest ?? ''
+          return {
+            Name: safeString(request?.Name ?? request?.name),
+            Email: safeString(request?.Email ?? request?.email),
+            Phone: safeString(request?.Phone ?? request?.phone),
+            RSVP: safeString(request?.RSVP ?? request?.rsvp),
+            Guest: safeString(guestRaw),
+            Message: safeString(request?.Message ?? request?.message),
+          } as GuestRequest
+        })
+      : []
+    
+    return NextResponse.json(normalizedData, { status: 200 })
   } catch (error) {
     console.error('Error fetching guest requests:', error)
     return NextResponse.json(
@@ -41,24 +66,19 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { Name, Email, Phone, RSVP, Message } = body
+    const { Name, Email, Phone, RSVP, Guest, Message } = body
 
     // Validation
-    if (!Name || typeof Name !== 'string') {
+    if (!Name || typeof Name !== 'string' || !Name.trim()) {
       return NextResponse.json(
         { error: 'Name is required' },
         { status: 400 }
       )
     }
 
-    if (!Email || typeof Email !== 'string') {
-      return NextResponse.json(
-        { error: 'Email is required' },
-        { status: 400 }
-      )
-    }
-
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(Email)) {
+    // Email is optional, but if provided, validate format
+    const emailTrimmed = Email?.trim() || ''
+    if (emailTrimmed && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailTrimmed)) {
       return NextResponse.json(
         { error: 'Invalid email format' },
         { status: 400 }
@@ -67,9 +87,10 @@ export async function POST(request: NextRequest) {
 
     const requestData = {
       Name: Name.trim(),
-      Email: Email.trim(),
+      Email: emailTrimmed || 'Pending', // Default to 'Pending' if not provided
       Phone: Phone?.trim() || '',
       RSVP: RSVP?.trim() || '',
+      Guest: Guest?.trim() || '',
       Message: Message?.trim() || '',
     }
 
@@ -100,7 +121,7 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json()
-    const { Name, Email, Phone, RSVP, Message } = body
+    const { Name, Email, Phone, RSVP, Guest, Message } = body
 
     // Validation
     if (!Name || typeof Name !== 'string') {
@@ -116,6 +137,7 @@ export async function PUT(request: NextRequest) {
       Email: Email?.trim() || 'Pending',
       Phone: Phone?.trim() || '',
       RSVP: RSVP?.trim() || '',
+      Guest: Guest?.trim() || '',
       Message: Message?.trim() || '',
     }
 

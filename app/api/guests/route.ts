@@ -1,12 +1,13 @@
 import { type NextRequest, NextResponse } from "next/server"
 
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby5LI2IZJysPqsywRwaC8aj0K0jXdj1as6gsJXhha7KXWaD6u-UFwlUyl0jOBjioRWZ/exec'
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwCVzAtCJ9mJYoXRsXfMZSXriyMCluO5IGP2hoSce9rQ-Z7upwBdNrlrrmNn5Vhy-uP/exec'
 
 // Guest interface matching the Google Sheets structure
 export interface Guest {
   Name: string
   Email: string
   RSVP: string
+  Guest: string
   Message: string
 }
 
@@ -25,7 +26,18 @@ export async function GET() {
     }
 
     const data = await response.json()
-    return NextResponse.json(data, { status: 200 })
+    
+    // Normalize the data to ensure Guest field is always present
+    // Handle both old format (without Guest) and new format (with Guest)
+    const normalizedData = Array.isArray(data) ? data.map((guest: any) => ({
+      Name: guest.Name || '',
+      Email: guest.Email || '',
+      RSVP: guest.RSVP || '',
+      Guest: guest.Guest || guest.GuestCount || '1', // Default to 1 if missing
+      Message: guest.Message || '',
+    })) : []
+    
+    return NextResponse.json(normalizedData, { status: 200 })
   } catch (error) {
     console.error('Error fetching guests:', error)
     return NextResponse.json(
@@ -39,7 +51,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { Name, Email, RSVP, Message } = body
+    const { Name, Email, RSVP, Guest, Message } = body
 
     // Validation
     if (!Name || typeof Name !== 'string') {
@@ -53,6 +65,7 @@ export async function POST(request: NextRequest) {
       Name: Name.trim(),
       Email: Email?.trim() || 'Pending',
       RSVP: RSVP?.trim() || '',
+      Guest: Guest?.trim() || '',
       Message: Message?.trim() || '',
     }
 
@@ -83,22 +96,54 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json()
-    const { Name, Email, RSVP, Message } = body
+    const { Name, Email, RSVP, Guest, Message, originalName } = body
+
+    // Use originalName for lookup if provided, otherwise use Name
+    // This allows updating a guest even if the name changed
+    const lookupName = originalName?.trim() || Name?.trim()
 
     // Validation
-    if (!Name || typeof Name !== 'string') {
+    if (!lookupName || typeof lookupName !== 'string') {
       return NextResponse.json(
         { error: 'Name is required' },
         { status: 400 }
       )
     }
 
-    const updateData = {
+    // Helper function to safely convert to string and trim
+    const safeString = (value: any): string => {
+      if (value === null || value === undefined) return ''
+      if (typeof value === 'number') return value.toString()
+      if (typeof value === 'string') return value.trim()
+      return String(value).trim()
+    }
+    
+    // Convert names to strings for comparison
+    const originalNameStr = safeString(originalName)
+    const nameStr = safeString(Name)
+    const nameChanged = originalNameStr && originalNameStr !== nameStr
+    
+    // Ensure we always send proper values (never undefined or null)
+    const updateData: any = {
       action: 'update',
-      Name: Name.trim(),
-      Email: Email?.trim() || 'Pending',
-      RSVP: RSVP?.trim() || '',
-      Message: Message?.trim() || '',
+      Email: safeString(Email) || 'Pending',
+      RSVP: safeString(RSVP),
+      Guest: safeString(Guest) || '1',
+      Message: safeString(Message),
+    }
+    
+    // If name changed, use originalName for lookup and Name for the new value
+    // If name didn't change, use Name for both lookup and value
+    if (nameChanged && originalNameStr) {
+      updateData.originalName = originalNameStr // For lookup
+      updateData.Name = nameStr || originalNameStr // New name value
+    } else {
+      updateData.Name = nameStr || safeString(lookupName) // Use for both lookup and value
+    }
+
+    // Debug: Log the data being sent
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Update payload being sent:', JSON.stringify(updateData, null, 2))
     }
 
     const response = await fetch(GOOGLE_SCRIPT_URL, {
@@ -109,16 +154,54 @@ export async function PUT(request: NextRequest) {
       body: JSON.stringify(updateData),
     })
 
-    if (!response.ok) {
-      throw new Error('Failed to update guest')
+    const responseText = await response.text()
+
+    // Parse the response
+    let data
+    try {
+      data = JSON.parse(responseText)
+    } catch (parseError) {
+      // If response is not JSON, it might be an HTML error page
+      console.error('Failed to parse response as JSON:', parseError)
+      console.error('Response text:', responseText.substring(0, 500))
+      
+      if (!response.ok) {
+        return NextResponse.json(
+          { 
+            error: `Google Apps Script returned an error. Status: ${response.status}. The script may need to be updated or redeployed.`,
+            details: responseText.substring(0, 200)
+          },
+          { status: response.status || 500 }
+        )
+      }
+      
+      // If status is ok but not JSON, assume success
+      data = { status: 'ok' }
     }
 
-    const data = await response.json()
+    // Check if the response indicates an error
+    if (data.error) {
+      console.error('Error in response data:', data.error)
+      return NextResponse.json(
+        { error: data.error },
+        { status: 400 }
+      )
+    }
+
+    // Check response status
+    if (!response.ok) {
+      const errorMessage = data.error || `Failed to update guest. Google Apps Script returned status ${response.status}`
+      return NextResponse.json(
+        { error: errorMessage },
+        { status: response.status || 500 }
+      )
+    }
+
     return NextResponse.json(data, { status: 200 })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error updating guest:', error)
     return NextResponse.json(
-      { error: 'Failed to update guest' },
+      { error: error?.message || 'Failed to update guest' },
       { status: 500 }
     )
   }

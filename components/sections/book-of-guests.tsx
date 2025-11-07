@@ -1,12 +1,13 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Loader2, Mail, Calendar, MessageSquare, Heart, Sparkles, Star, User } from "lucide-react"
+import { Loader2, Mail, MessageSquare, Heart, Sparkles, User } from "lucide-react"
 
 interface Guest {
   Name: string
   Email: string
   RSVP: string
+  Guest: string
   Message: string
 }
 
@@ -39,11 +40,22 @@ export function BookOfGuests() {
 
       const data: Guest[] = await response.json()
 
-      // Filter only attending guests
-      const attendingGuests = data.filter((guest) => guest.RSVP === "Yes")
+      // Filter only attending guests and normalize Guest field
+      const attendingGuests = data
+        .filter((guest) => guest.RSVP === "Yes")
+        .map((guest) => ({
+          ...guest,
+          Guest: guest.Guest || '1', // Ensure Guest field exists
+        }))
+      
+      // Calculate total guests by summing the Guest column values
+      const totalGuestCount = attendingGuests.reduce((sum, guest) => {
+        const guestCount = parseInt(String(guest.Guest)) || 1
+        return sum + guestCount
+      }, 0)
       
       setGuests(attendingGuests)
-      setTotalGuests(attendingGuests.length)
+      setTotalGuests(totalGuestCount)
     } catch (error: any) {
       console.error("Failed to load guests:", error)
       setError(error?.message || "Failed to load guest list")
@@ -186,9 +198,14 @@ export function BookOfGuests() {
                   <div className="bg-gradient-to-r from-[#666956] to-[#8D8E7C] p-1 md:p-3 rounded-full shadow-lg">
                     <Heart className="text-[#FFE5E4] h-3 w-3 md:h-6 md:w-6" />
                   </div>
-                  <h3 className="text-sm sm:text-2xl md:text-3xl font-playfair font-bold text-[#666956]">
-                    {totalGuests} {totalGuests === 1 ? "Guest" : "Guests"} Celebrating With Us
-                  </h3>
+                  <div className="flex flex-col items-center">
+                    <h3 className="text-sm sm:text-2xl md:text-3xl font-playfair font-bold text-[#666956]">
+                      {totalGuests} {totalGuests === 1 ? "Guest" : "Guests"} Celebrating With Us
+                    </h3>
+                    <p className="text-xs sm:text-sm text-[#666956]/60 font-lora mt-1">
+                      {guests.length} {guests.length === 1 ? "RSVP entry" : "RSVP entries"}
+                    </p>
+                  </div>
                 </div>
                 <p className="text-xs sm:text-base md:text-lg text-[#666956]/75 font-lora leading-relaxed">
                   Thank you for confirming your RSVP! Your presence means the world to us.
@@ -279,12 +296,21 @@ export function BookOfGuests() {
                           </div>
                         </div>
                         
-                        {/* Name and Email */}
+                        {/* Name, Email, and Guest Count */}
                         <div className="flex-1 min-w-0">
                           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-2">
-                            <h4 className="font-lora text-[#666956] text-sm sm:text-xl font-semibold leading-tight transition-colors duration-300 group-hover:text-[#B08981]">
-                              {guest.Name}
-                            </h4>
+                            <div className="flex-1">
+                              <h4 className="font-lora text-[#666956] text-sm sm:text-xl font-semibold leading-tight transition-colors duration-300 group-hover:text-[#B08981]">
+                                {guest.Name}
+                              </h4>
+                            </div>
+                            {/* Guest count badge */}
+                            <div className="flex items-center gap-1.5 sm:gap-2">
+                              <User className="h-3 w-3 sm:h-4 sm:w-4 text-[#B08981] flex-shrink-0" />
+                              <span className="inline-flex items-center justify-center px-2 sm:px-3 py-0.5 sm:py-1 bg-blue-50 text-blue-700 rounded-full text-xs sm:text-sm font-semibold border border-blue-200 min-w-[2.5rem] sm:min-w-[3rem]">
+                                {guest.Guest ? (parseInt(String(guest.Guest)) || 1) : 1} {parseInt(String(guest.Guest || '1')) === 1 ? 'guest' : 'guests'}
+                              </span>
+                            </div>
                           </div>
                           {guest.Email && guest.Email !== "Pending" && (
                             <div className="flex items-center text-xs sm:text-sm text-[#666956]/70 mt-0.5 sm:mt-1">
@@ -315,14 +341,6 @@ export function BookOfGuests() {
                           </div>
                         </div>
                       )}
-
-                      {/* Footer with guest number */}
-                      <div className="flex items-center justify-end pt-1 sm:pt-2 border-t border-[#B08981]/30">
-                        <div className="flex items-center gap-0.5 sm:gap-1">
-                          <User className="h-2 w-2 sm:h-3 sm:w-3 text-[#B08981]" />
-                          <span className="text-xs text-gray-500 font-lora">Guest #{index + 1}</span>
-                        </div>
-                      </div>
                     </div>
                     </div>
                   </div>

@@ -633,14 +633,14 @@ export function GuestList() {
                       <label className="flex items-center gap-2 text-sm sm:text-lg font-semibold text-[#666956] mb-2 sm:mb-3 font-sans">
                         <Mail className="h-4 w-4 sm:h-5 sm:w-5 text-[#B08981]" />
                         Your Email Address
-                        <span className="text-xs sm:text-sm font-normal text-[#666956]/60">(Optional)</span>
+                        <span className="text-xs sm:text-sm font-normal text-[#666956]/60">(Optional - can be left blank)</span>
                       </label>
                       <input
                         type="email"
                         name="Email"
                         value={formData.Email}
                         onChange={handleFormChange}
-                        placeholder="your.email@example.com"
+                        placeholder="your.email@example.com (optional)"
                         className="w-full px-3 sm:px-4 py-2 sm:py-3 border-2 border-[#666956]/20 focus:border-[#B08981] rounded-xl text-sm font-sans placeholder:text-[#666956]/40 transition-all duration-300 focus:ring-4 focus:ring-[#B08981]/10 bg-white/80"
                       />
                     </div>
@@ -669,19 +669,56 @@ export function GuestList() {
                 )}
               </div>
 
-              {/* Success message overlay */}
+              {/* Enhanced Success Overlay */}
               {success && (
-                <div className="absolute inset-0 bg-green-500/95 backdrop-blur-sm flex items-center justify-center z-50 animate-in fade-in">
-                  <div className="text-center p-8">
-                    <div className="inline-flex items-center justify-center w-24 h-24 bg-white/20 rounded-full mb-6 backdrop-blur-md">
-                      <CheckCircle className="h-12 w-12 text-white animate-in zoom-in" />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#666956]/98 via-[#8D8E7C]/98 to-[#666956]/98 backdrop-blur-md flex items-center justify-center z-50 animate-in fade-in duration-300">
+                  <div className="text-center p-6 sm:p-8 max-w-sm mx-auto">
+                    {/* Enhanced Icon Circle */}
+                    <div className="relative inline-flex items-center justify-center mb-5 sm:mb-6">
+                      {/* Animated rings */}
+                      <div className="absolute inset-0 rounded-full border-4 border-[#FFE5E4]/20 animate-ping" />
+                      <div className="absolute inset-0 rounded-full border-2 border-[#FFE5E4]/30" />
+                      {/* Icon container */}
+                      <div className="relative w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-[#FFE5E4] to-white rounded-full flex items-center justify-center shadow-xl">
+                        <CheckCircle className="h-10 w-10 sm:h-12 sm:w-12 text-[#666956]" strokeWidth={2.5} />
+                      </div>
                     </div>
-                    <h4 className="text-3xl font-serif font-bold text-white mb-3">
-                      Thank You!
+                    
+                    {/* Title */}
+                    <h4 className="text-2xl sm:text-3xl font-serif font-bold text-[#FFE5E4] mb-3 sm:mb-4">
+                      RSVP Confirmed!
                     </h4>
-                    <p className="text-white/95 text-xl">
-                      {success}
-                    </p>
+                    
+                    {/* Message based on RSVP response */}
+                    {formData.RSVP === "Yes" && (
+                      <div className="space-y-2 mb-4 sm:mb-5">
+                        <p className="text-[#FFE5E4]/95 text-base sm:text-lg font-medium">
+                          We're thrilled you'll be joining us!
+                        </p>
+                        <p className="text-[#FFE5E4]/80 text-sm sm:text-base">
+                          Your response has been recorded
+                        </p>
+                      </div>
+                    )}
+                    {formData.RSVP === "No" && (
+                      <p className="text-[#FFE5E4]/90 text-base sm:text-lg mb-4 sm:mb-5">
+                        We'll miss you, but thank you for letting us know.
+                      </p>
+                    )}
+                    {!formData.RSVP && (
+                      <p className="text-[#FFE5E4]/90 text-base sm:text-lg mb-4 sm:mb-5">
+                        Thank you for your response!
+                      </p>
+                    )}
+                    
+                    {/* Subtle closing indicator */}
+                    <div className="flex items-center justify-center gap-2 mt-4 sm:mt-5">
+                      <div className="w-1.5 h-1.5 bg-[#FFE5E4]/60 rounded-full animate-pulse" />
+                      <p className="text-[#FFE5E4]/70 text-xs sm:text-sm">
+                        This will close automatically
+                      </p>
+                      <div className="w-1.5 h-1.5 bg-[#FFE5E4]/60 rounded-full animate-pulse" />
+                    </div>
                   </div>
                 </div>
               )}
@@ -835,19 +872,44 @@ export function GuestList() {
                 </form>
               </div>
 
-              {/* Success message overlay */}
+              {/* Enhanced Success Overlay */}
               {requestSuccess && (
-                <div className="absolute inset-0 bg-green-500/95 backdrop-blur-sm flex items-center justify-center z-50 animate-in fade-in">
-                  <div className="text-center p-6 sm:p-8">
-                    <div className="inline-flex items-center justify-center w-16 h-16 sm:w-24 sm:h-24 bg-white/20 rounded-full mb-4 sm:mb-6 backdrop-blur-md">
-                      <CheckCircle className="h-8 w-8 sm:h-12 sm:w-12 text-white animate-in zoom-in" />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#666956]/98 via-[#8D8E7C]/98 to-[#666956]/98 backdrop-blur-md flex items-center justify-center z-50 animate-in fade-in duration-300">
+                  <div className="text-center p-6 sm:p-8 max-w-sm mx-auto">
+                    {/* Enhanced Icon Circle */}
+                    <div className="relative inline-flex items-center justify-center mb-5 sm:mb-6">
+                      {/* Animated rings */}
+                      <div className="absolute inset-0 rounded-full border-4 border-[#FFE5E4]/20 animate-ping" />
+                      <div className="absolute inset-0 rounded-full border-2 border-[#FFE5E4]/30" />
+                      {/* Icon container */}
+                      <div className="relative w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-[#FFE5E4] to-white rounded-full flex items-center justify-center shadow-xl">
+                        <CheckCircle className="h-10 w-10 sm:h-12 sm:w-12 text-[#666956]" strokeWidth={2.5} />
+                      </div>
                     </div>
-                    <h4 className="text-2xl sm:text-3xl font-serif font-bold text-white mb-2 sm:mb-3">
-                      Thank You!
+                    
+                    {/* Title */}
+                    <h4 className="text-2xl sm:text-3xl font-serif font-bold text-[#FFE5E4] mb-3 sm:mb-4">
+                      Request Sent!
                     </h4>
-                    <p className="text-white/95 text-base sm:text-xl">
-                      {requestSuccess}
-                    </p>
+                    
+                    {/* Message */}
+                    <div className="space-y-2 mb-4 sm:mb-5">
+                      <p className="text-[#FFE5E4]/95 text-base sm:text-lg font-medium">
+                        We've received your request
+                      </p>
+                      <p className="text-[#FFE5E4]/85 text-sm sm:text-base">
+                        We'll review it and get back to you soon
+                      </p>
+                    </div>
+                    
+                    {/* Subtle closing indicator */}
+                    <div className="flex items-center justify-center gap-2 mt-4 sm:mt-5">
+                      <div className="w-1.5 h-1.5 bg-[#FFE5E4]/60 rounded-full animate-pulse" />
+                      <p className="text-[#FFE5E4]/70 text-xs sm:text-sm">
+                        This will close automatically
+                      </p>
+                      <div className="w-1.5 h-1.5 bg-[#FFE5E4]/60 rounded-full animate-pulse" />
+                    </div>
                   </div>
                 </div>
               )}
