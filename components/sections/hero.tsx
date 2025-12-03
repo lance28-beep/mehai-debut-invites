@@ -6,18 +6,12 @@ import { Cormorant_Garamond, WindSong } from "next/font/google"
 import { siteConfig } from "@/content/site"
 
 const desktopImages = [
-  "/desktop-background/couple (1).jpg",
-  "/desktop-background/couple (4).jpg",
-  "/desktop-background/couple (5).jpg",
-  "/desktop-background/couple (6).jpg",
+  "/desktop-background/couple 1.JPG"
 ]
 
 const mobileImages = [
-  "/mobile-background/couple (16).jpg",
-  "/mobile-background/couple (19).jpg",
-  "/mobile-background/couple (20).jpg",
-  "/mobile-background/couple (9).jpg",
-  "/mobile-background/couple (17).jpg",
+  "/mobile-background/couple 1.JPG",
+  "/mobile-background/couple 2.JPG",
 ]
 
 const SHOW_BUTTERFLIES = false
@@ -97,13 +91,13 @@ export function Hero() {
     }
   }, [imagesLoaded])
 
-  const [weddingMonth = "December", weddingDayRaw = "21", weddingYear = "2025"] =
+  const [weddingMonth = "June", weddingDayRaw = "7", weddingYear = "2026"] =
     siteConfig.wedding.date.split(" ")
-  const weddingDayNumber = weddingDayRaw.replace(/[^0-9]/g, "") || "21"
+  const weddingDayNumber = weddingDayRaw.replace(/[^0-9]/g, "") || "7"
   const ceremonyTime = siteConfig.wedding.time
 
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#1A0010]">
+    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#525E2C]">
       <div className="absolute inset-0 w-full h-full">
         {imagesLoaded && backgroundImages.map((image, index) => (
           <div
@@ -120,10 +114,10 @@ export function Hero() {
             }}
           />
         ))}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1A0010]/95 via-[#660033]/75 to-transparent z-0" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#1A0010]/85 z-0" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(102,0,51,0.25),transparent_55%)] mix-blend-screen" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(253,236,239,0.18),transparent_35%)] opacity-70 animate-[pulse_9s_ease-in-out_infinite]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#3D4636]/95 via-[#525E2C]/80 to-transparent z-0" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#3D4636]/85 z-0" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(224,207,181,0.3),transparent_55%)] mix-blend-screen" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(240,240,238,0.28),transparent_35%)] opacity-70 animate-[pulse_9s_ease-in-out_infinite]" />
       </div>
 
       {SHOW_BUTTERFLIES && (
@@ -453,24 +447,23 @@ export function Hero() {
           <div className="space-y-2 sm:space-y-3 md:space-y-4">
             {/* Names & Tagline */}
             <h1
-              className={`${windSong.className} text-xl sm:text-2xl md:text-3xl font-normal text-center`}
+              className={`${cormorant.className} text-xs sm:text-sm md:text-base lg:text-lg tracking-[0.24em] sm:tracking-[0.28em] uppercase font-medium text-center text-[#F0F0EE]`}
               style={{
-                color: '#FDECEF',
-                textShadow: "0 2px 8px rgba(0,0,0,0.7)",
+                textShadow: "0 2px 10px rgba(0,0,0,0.75)",
               }}
             >
-              We do
+              Together with our families,
               <br />
-              always and forever.
+              we joyfully invite you to witness our union.
             </h1>
             <h1
-              className="style-script-regular text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl drop-shadow-2xl"
+              className="style-script-regular text-6xl sm:text-7xl md:text-7xl lg:text-8xl xl:text-9xl drop-shadow-2xl"
               style={{
                 color: '#FFFFFF',
                 textShadow: "0 0 24px rgba(0,0,0,0.9)",
               }}
             >
-              Jonarelh &amp; Hazel
+              Ced &amp; Kim
             </h1>
           </div>
 
@@ -486,27 +479,27 @@ export function Hero() {
 
               <div className="flex w-full items-center gap-2 sm:gap-4 md:gap-5">
                 {/* Day of week & divider */}
-                <div className="flex flex-1 items-center justify-end gap-1.5 sm:gap-2.5">
-                  <span className="h-[0.5px] flex-1 bg-[#FDF8F5]/45" />
+              <div className="flex flex-1 items-center justify-end gap-1.5 sm:gap-2.5">
+                  <span className="h-[0.5px] flex-1 bg-[#F0F0EE]/45" />
                   <span className="text-[0.6rem] sm:text-[0.7rem] md:text-xs uppercase tracking-[0.3em] sm:tracking-[0.4em] font-light">
                     Sun
                   </span>
-                  <span className="h-[0.5px] w-6 sm:w-8 md:w-10 bg-[#FDF8F5]/45" />
+                  <span className="h-[0.5px] w-6 sm:w-8 md:w-10 bg-[#F0F0EE]/45" />
                 </div>
 
                 {/* Day number */}
                 <div className="relative flex items-center justify-center px-3 sm:px-4 md:px-5">
                   <span
                     aria-hidden="true"
-                    className="absolute inset-0 mx-auto h-[70%] max-h-[180px] w-[100px] sm:w-[140px] md:w-[170px] rounded-full bg-gradient-to-b from-[#660033]/40 via-[#2A0018]/40 to-transparent blur-[28px] opacity-70"
+                    className="absolute inset-0 mx-auto h-[70%] max-h-[180px] w-[100px] sm:w-[140px] md:w-[170px] rounded-full bg-gradient-to-b from-[#D1AB6D]/55 via-[#909E8D]/40 to-transparent blur-[28px] opacity-75"
                   />
                   <span
-                    className={`${cormorant.className} relative text-[3rem] sm:text-[4.5rem] md:text-[5.5rem] lg:text-[6rem] font-light leading-none tracking-wider text-white`}
+                    className={`${cormorant.className} relative text-[4rem] sm:text-[5.5rem] md:text-[6.5rem] lg:text-[7rem] font-light leading-none tracking-wider text-white`}
                     style={{
                       textShadow:
-                        "0 0 20px rgba(255,255,255,0.9), 0 0 40px rgba(255,255,255,0.7), 0 0 60px rgba(102,0,51,0.8), 0 0 80px rgba(102,0,51,0.6), 0 0 100px rgba(102,0,51,0.4), 0 4px 20px rgba(0,0,0,0.5)",
+                        "0 0 24px rgba(255,255,255,0.95), 0 0 40px rgba(209,171,109,0.85), 0 0 70px rgba(82,94,44,0.8), 0 4px 22px rgba(0,0,0,0.6)",
                       filter:
-                        "drop-shadow(0 0 30px rgba(255,255,255,0.8)) drop-shadow(0 0 50px rgba(102,0,51,0.6))",
+                        "drop-shadow(0 0 34px rgba(240,240,238,0.9)) drop-shadow(0 0 52px rgba(209,171,109,0.85))",
                     }}
                   >
                     {weddingDayNumber}
@@ -515,7 +508,7 @@ export function Hero() {
 
                 {/* Time */}
                 <div className="flex flex-1 items-center gap-1.5 sm:gap-2.5">
-                  <span className="h-[0.5px] w-6 sm:w-8 md:w-10 bg-[#FDF8F5]/45" />
+                  <span className="h-[0.5px] w-6 sm:w-8 md:w-10 bg-[#F0F0EE]/45" />
                   <span className="text-[0.6rem] sm:text-[0.7rem] md:text-xs uppercase tracking-[0.3em] sm:tracking-[0.4em] font-light">
                     {ceremonyTime.split(",")[0]}
                   </span>
@@ -532,32 +525,32 @@ export function Hero() {
           {/* Venue */}
           <div className="space-y-1 sm:space-y-1.5 pt-1 sm:pt-2">
             <p
-              className={`${cormorant.className} text-xs sm:text-sm md:text-base lg:text-lg uppercase tracking-[0.22em] sm:tracking-[0.26em] md:tracking-[0.3em] text-[#F5E5D9] font-medium`}
+              className={`${cormorant.className} text-xs sm:text-sm md:text-base lg:text-lg uppercase tracking-[0.22em] sm:tracking-[0.26em] md:tracking-[0.3em] text-[#F0F0EE] font-medium`}
               style={{
-                textShadow: "0 2px 18px rgba(0,0,0,0.8)",
+                textShadow: "0 2px 18px rgba(0,0,0,0.9)",
               }}
             >
               {siteConfig.ceremony.venue}
             </p>
             <p
-              className={`${cormorant.className} text-[0.6rem] sm:text-[0.7rem] md:text-xs lg:text-sm tracking-[0.15em] sm:tracking-[0.18em] text-[#FDF8F5]/90 font-light px-4 sm:px-8 md:px-12`}
+              className={`${cormorant.className} text-[0.6rem] sm:text-[0.7rem] md:text-xs lg:text-sm tracking-[0.15em] sm:tracking-[0.18em] text-[#F0F0EE]/90 font-light px-4 sm:px-8 md:px-12`}
               style={{
                 textShadow: "0 2px 12px rgba(0,0,0,0.7)",
               }}
             >
-              Ceremony followed by reception at {siteConfig.reception.venue}
+              Ceremony and celebration to follow at {siteConfig.reception.venue}
             </p>
           </div>
 
           {/* Call-to-action section */}
           <div className="pt-3 sm:pt-4 md:pt-5 flex flex-col gap-3 sm:gap-4 items-center max-w-2xl mx-auto w-full px-4">
             <p
-              className={`${cormorant.className} text-[0.7rem] sm:text-xs md:text-sm lg:text-base uppercase tracking-[0.24em] sm:tracking-[0.28em] text-[#FDECEF]/95 font-normal leading-relaxed text-center px-4`}
+              className={`${cormorant.className} text-[0.7rem] sm:text-xs md:text-sm lg:text-base uppercase tracking-[0.24em] sm:tracking-[0.28em] text-[#F0F0EE]/95 font-normal leading-relaxed text-center px-4`}
               style={{
                 textShadow: "0 2px 14px rgba(0,0,0,0.7)",
               }}
             >
-              You are cordially Invited
+              Your presence, prayers, and love will mean the world to us.
             </p>
 
             {/* Call-to-action buttons */}
@@ -569,22 +562,22 @@ export function Hero() {
                 boxShadow: "0 10px 30px rgba(0,0,0,0.55)",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "#800040";
+                e.currentTarget.style.backgroundColor = "#3D4636";
                 e.currentTarget.style.transform = "translateY(-2px)";
                 e.currentTarget.style.boxShadow = "0 14px 40px rgba(0,0,0,0.7)";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "rgba(102, 0, 51, 0.9)";
+                e.currentTarget.style.backgroundColor = "rgba(82, 94, 44, 0.95)";
                 e.currentTarget.style.transform = "translateY(0)";
                 e.currentTarget.style.boxShadow = "0 10px 30px rgba(0,0,0,0.55)";
               }}
             >
               <span
                 aria-hidden
-                className="absolute inset-0 rounded-lg bg-gradient-to-r from-[#660033] to-[#A8376D] transition-all duration-500 group-hover:from-[#A8376D] group-hover:to-[#660033]"
+                className="absolute inset-0 rounded-lg bg-gradient-to-r from-[#525E2C] to-[#909E8D] transition-all duration-500 group-hover:from-[#909E8D] group-hover:to-[#525E2C]"
               />
               <span className="relative z-10 inline-flex h-full min-h-[3rem] sm:min-h-[3.25rem] w-full items-center justify-center px-6 sm:px-8 text-[0.65rem] sm:text-[0.7rem] md:text-xs uppercase tracking-[0.32em] sm:tracking-[0.36em] text-[#FDF8F5] font-semibold transition-all duration-300">
-                RSVP
+                Confirm Attendance
               </span>
               <div 
                 className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform -skew-x-12 group-hover:translate-x-full"
@@ -597,10 +590,10 @@ export function Hero() {
             >
               <span
                 aria-hidden
-                className="absolute inset-0 rounded-lg bg-transparent border-2 border-[#F5E5D9] transition-all duration-500 group-hover:bg-[#F5E5D9]/10"
+                className="absolute inset-0 rounded-lg bg-transparent border-2 border-[#E0CFB5] transition-all duration-500 group-hover:bg-[#E0CFB5]/10"
               />
-              <span className="relative z-10 inline-flex h-full min-h-[3rem] sm:min-h-[3.25rem] w-full items-center justify-center px-6 sm:px-8 text-[0.65rem] sm:text-[0.7rem] md:text-xs uppercase tracking-[0.32em] sm:tracking-[0.36em] text-[#F5E5D9] font-semibold transition-all duration-300">
-                Our Story
+              <span className="relative z-10 inline-flex h-full min-h-[3rem] sm:min-h-[3.25rem] w-full items-center justify-center px-6 sm:px-8 text-[0.65rem] sm:text-[0.7rem] md:text-xs uppercase tracking-[0.32em] sm:tracking-[0.36em] text-[#F0F0EE] font-semibold transition-all duration-300">
+                Read Our Story
               </span>
               <div 
                 className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform -skew-x-12 group-hover:translate-x-full"

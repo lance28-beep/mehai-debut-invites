@@ -19,17 +19,17 @@ const faqItems: FAQItem[] = [
   {
     question: "When is the wedding?",
     answer:
-      "Our wedding will be held on December 21, 2025. The wedding ceremony will start at exactly 1:00 PM, PH Time. We kindly ask guests to arrive by 12:30 PM to help us begin promptly.",
+      "Our wedding will be held on June 7, 2026. The wedding ceremony will start at exactly 4:15 PM, PH Time. We kindly ask guests to arrive by 3:45 PM to help us begin promptly.",
   },
   {
     question: "Where will the ceremony and reception take place?",
     answer:
-      "The ceremony will be held at Gutapol SDA Church, located at Gutapol, Kibawe, Bukidnon. The reception will follow at Kibawe Function Hall. You can find directions and copy addresses in the Details section above.",
+      "Both the ceremony and reception will be held at Patio Luisa. You can find directions and copy the address in the Details section above.",
   },
   {
     question: "When is the RSVP deadline?",
     answer:
-      `Kindly respond on or before December 21, 2025. Your response helps us finalize our guest list and seating arrangements. Thank you!\n\n[RSVP_LINK]Click here to RSVP[/RSVP_LINK]`,
+      `Kindly respond on or before June 7, 2026. Your response helps us finalize our guest list and seating arrangements. Thank you!\n\n[RSVP_LINK]Click here to RSVP[/RSVP_LINK]`,
   },
   {
     question: "How do I RSVP?",
@@ -39,12 +39,12 @@ const faqItems: FAQItem[] = [
   {
     question: "What time should I arrive?",
     answer:
-      "Kindly arrive by 12:30 PM so we can begin the ceremony promptly at exactly 1:00 PM. Your punctuality means so much to us — and don't forget to grab lunch beforehand so you can enjoy the celebration comfortably!",
+      "Kindly arrive by 3:45 PM so we can begin the ceremony promptly at exactly 4:15 PM. Your punctuality means so much to us — and don't forget to have a light snack beforehand so you can enjoy the celebration comfortably!",
   },
   {
     question: "What should I wear?",
     answer:
-      "Formal attire is lovingly encouraged. Please dress according to our burgundy wedding motif with soft blush and ivory accents. For guests, semi-formal or formal attire in burgundy, blush, and soft neutral tones is warmly encouraged. We kindly request no white dresses, jeans, or shorts.",
+      "Formal attire is lovingly encouraged. Our motif is Sage Green, White, and Gold. For guests, semi-formal or formal attire in sage greens, soft neutrals, and light gold accents is warmly encouraged. We kindly request no all-white dresses, jeans, or shorts.",
   },
   {
     question: "Can I bring a plus one?",
@@ -54,7 +54,7 @@ const faqItems: FAQItem[] = [
   {
     question: "Is there parking available?",
     answer:
-      "Yes! Parking is available at both the church and the reception venue. Please arrive early to find a comfortable spot. Private vehicles and local transport are welcome.",
+      "Yes! Parking is available at the venue. Please arrive early to find a comfortable spot. Private vehicles and local transport are welcome.",
   },
   {
     question: "How do I get directions to the venues?",
@@ -79,7 +79,7 @@ const faqItems: FAQItem[] = [
   {
     question: "What happens after the ceremony?",
     answer:
-      "The reception will follow immediately after the ceremony at Kibawe Function Hall. The seating will be formal, RSVP-style, so please make sure you've confirmed your attendance through the RSVP form.",
+      "The reception will follow after the ceremony at Patio Luisa. The seating will be formal, RSVP-style, so please make sure you've confirmed your attendance through the RSVP form.",
   },
   {
     question: "Are children welcome?",
@@ -89,7 +89,7 @@ const faqItems: FAQItem[] = [
   {
     question: "What if I can't attend?",
     answer:
-      "We completely understand if you cannot attend. Please still RSVP to let us know, and feel free to leave a message for Jonarelh and Hazel. Your presence will be missed, but your well wishes mean the world to us!",
+      "We completely understand if you cannot attend. Please still RSVP to let us know, and feel free to leave a message for Kim and Ced. Your presence will be missed, but your well wishes mean the world to us!",
   },
 ]
 
@@ -103,21 +103,24 @@ export function FAQ() {
   return (
     <Section
       id="faq"
-      className="relative py-12 md:py-16 lg:py-20 overflow-hidden bg-[#660033]"
+      className="relative py-12 md:py-16 lg:py-20 overflow-hidden bg-[#909E8D]"
     >
-      {/* Background elements with burgundy motif (same as principal sponsors) */}
+      {/* Background elements with sage & champagne motif (using #909E8D as primary) */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Subtle gradient overlays */}
-        <div className="absolute top-0 left-0 w-full h-1/3 bg-gradient-to-b from-[#1A0010]/80 via-[#660033]/60 to-transparent" />
-        <div className="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-[#1A0010]/85 via-[#660033]/55 to-transparent" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(253,236,239,0.16),transparent_55%)] opacity-80" />
+        {/* Vertical sage gradients to frame the FAQ */}
+        <div className="absolute top-0 left-0 w-full h-1/3 bg-gradient-to-b from-[#3D4636]/92 via-[#909E8D]/75 to-transparent" />
+        <div className="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-[#3D4636]/95 via-[#909E8D]/70 to-transparent" />
+        {/* Soft radial light in warm neutrals */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(224,207,181,0.28),transparent_55%)] opacity-90" />
+        {/* Subtle diagonal wash of muted sage */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#909E8D]/25 via-transparent to-[#F0F0EE]/10 mix-blend-soft-light" />
       </div>
 
       {/* Section Header */}
       <div className="relative z-30 text-center mb-6 sm:mb-9 md:mb-12 px-3 sm:px-4">
         {/* Small label */}
         <p
-          className={`${cormorant.className} text-[0.7rem] sm:text-xs md:text-sm uppercase tracking-[0.28em] text-[#FDECEF]/85 mb-2`}
+          className={`${cormorant.className} text-[0.7rem] sm:text-xs md:text-sm uppercase tracking-[0.28em] text-white mb-2`}
           style={{ textShadow: "0 2px 10px rgba(0,0,0,0.6)" }}
         >
           Common Questions
@@ -132,16 +135,16 @@ export function FAQ() {
 
         {/* Simple divider */}
         <div className="flex items-center justify-center gap-2 mt-3 sm:mt-4">
-          <div className="w-8 sm:w-12 md:w-16 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent" />
-          <div className="w-1.5 h-1.5 bg-white rounded-full shadow-[0_0_12px_rgba(255,255,255,0.7)]" />
-          <div className="w-8 sm:w-12 md:w-16 h-px bg-gradient-to-l from-transparent via-white/60 to-transparent" />
+          <div className="w-8 sm:w-12 md:w-16 h-px bg-gradient-to-r from-transparent via-[#D1AB6D] to-transparent" />
+          <div className="w-1.5 h-1.5 bg-[#D1AB6D] rounded-full shadow-[0_0_12px_rgba(209,171,109,0.9)]" />
+          <div className="w-8 sm:w-12 md:w-16 h-px bg-gradient-to-l from-transparent via-[#D1AB6D] to-transparent" />
         </div>
       </div>
 
       {/* FAQ content */}
       <div className="relative z-30 max-w-4xl mx-auto px-3 sm:px-5">
         {/* Main card */}
-        <div className="relative bg-white/10 backdrop-blur-md border border-[#FDECEF]/25 rounded-lg sm:rounded-xl md:rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.45)] overflow-hidden">
+        <div className="relative bg-white/10 backdrop-blur-md border border-[#E0CFB5]/60 rounded-lg sm:rounded-xl md:rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.45)] overflow-hidden">
           {/* FAQ items */}
           <div className="relative p-2.5 sm:p-4 md:p-5 lg:p-6">
             <div className="space-y-1.5 sm:space-y-2 md:space-y-3">
@@ -151,7 +154,7 @@ export function FAQ() {
                 return (
                   <div
                     key={index}
-                    className="rounded-lg sm:rounded-xl border border-[#FDECEF]/30 bg-white/5 backdrop-blur-sm hover:border-[#FDECEF]/50 hover:bg-white/10 transition-all duration-300 hover:shadow-md overflow-hidden"
+                    className="rounded-lg sm:rounded-xl border border-[#E0CFB5]/40 bg-white/5 backdrop-blur-sm hover:border-[#E0CFB5]/70 hover:bg-white/10 transition-all duration-300 hover:shadow-md overflow-hidden"
                   >
                     <button
                       onClick={() => toggleItem(index)}
@@ -177,13 +180,13 @@ export function FAQ() {
                       }`}
                     >
                       <div className="overflow-hidden">
-                        <div className="px-2.5 sm:px-3 md:px-4 lg:px-5 py-2 sm:py-2.5 md:py-3 lg:py-4 bg-white/5 border-t border-[#FDECEF]/20">
+                        <div className="px-2.5 sm:px-3 md:px-4 lg:px-5 py-2 sm:py-2.5 md:py-3 lg:py-4 bg-white/5 border-t border-[#E0CFB5]/30">
                           {item.answer.includes("[RSVP_LINK]") ? (
-                            <p className={`${cormorant.className} text-white/90 leading-snug sm:leading-relaxed text-xs sm:text-sm md:text-base whitespace-pre-line`}>
+                            <p className={`${cormorant.className} text-white/95 leading-snug sm:leading-relaxed text-xs sm:text-sm md:text-base whitespace-pre-line`}>
                               {item.answer.split("[RSVP_LINK]")[0]}
                               <a 
                                 href="#guest-list" 
-                                className="text-[#FDECEF] underline font-semibold hover:text-white transition-colors"
+                                className="text-white underline font-semibold hover:text-[#F0F0EE] transition-colors"
                                 onClick={(e) => {
                                   e.preventDefault()
                                   document.getElementById('guest-list')?.scrollIntoView({ behavior: 'smooth' })
@@ -194,7 +197,7 @@ export function FAQ() {
                               {item.answer.split("[/RSVP_LINK]")[1]}
                             </p>
                           ) : (
-                            <p className={`${cormorant.className} text-white/90 leading-snug sm:leading-relaxed text-xs sm:text-sm md:text-base whitespace-pre-line`}>
+                            <p className={`${cormorant.className} text-white/95 leading-snug sm:leading-relaxed text-xs sm:text-sm md:text-base whitespace-pre-line`}>
                               {item.answer}
                             </p>
                           )}

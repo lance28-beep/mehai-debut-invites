@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react"
 import { Section } from "@/components/section"
-import Counter from "@/components/counter"
 import Image from "next/image"
 import { motion } from "motion/react"
 import { Cormorant_Garamond } from "next/font/google"
 import { siteConfig } from "@/content/site"
+import Counter from "@/components/Counter"
 
 interface TimeLeft {
   days: number
@@ -15,23 +15,74 @@ interface TimeLeft {
   seconds: number
 }
 
+interface CountdownUnitProps {
+  value: number
+  label: string
+}
+
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
 })
 
+function CountdownUnit({ value, label }: CountdownUnitProps) {
+  const places = value >= 100 ? [100, 10, 1] : [10, 1]
+
+  return (
+    <div className="flex flex-col items-center gap-1.5 sm:gap-2">
+      {/* Elegant card with subtle hover glow */}
+      <div className="relative w-full max-w-[88px] sm:max-w-[96px] md:max-w-[110px] lg:max-w-[120px] group">
+        {/* Glow on hover */}
+        <div className="pointer-events-none absolute -inset-[3px] rounded-2xl bg-gradient-to-br from-[#D1AB6D]/28 via-[#9B7C6A]/18 to-transparent opacity-0 blur-md transition-opacity duration-500 group-hover:opacity-100" />
+
+        {/* Main card */}
+        <div className="relative rounded-xl sm:rounded-2xl border border-white/40/80 bg-white/95/90 px-2.5 py-2.5 sm:px-3.5 sm:py-3.5 md:px-4 md:py-4 shadow-[0_12px_32px_rgba(0,0,0,0.45)]">
+          <div className="relative z-10 flex items-center justify-center">
+            <Counter
+              value={value}
+              places={places}
+              fontSize={26}
+              padding={4}
+              gap={2}
+              textColor="#FFFFFF"
+              fontWeight={800}
+              borderRadius={6}
+              horizontalPadding={3}
+              gradientHeight={0}
+              gradientFrom="transparent"
+              gradientTo="transparent"
+              counterStyle={{
+                backgroundColor: "transparent",
+              }}
+              digitStyle={{
+                minWidth: "1.15ch",
+                fontFamily: "Arial, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+              }}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Label */}
+      <span className="text-[10px] sm:text-xs md:text-sm font-inter font-semibold uppercase tracking-[0.16em] text-white/90">
+        {label}
+      </span>
+    </div>
+  )
+}
+
 export function Countdown() {
   const ceremonyDate = siteConfig.ceremony.date
   const ceremonyTimeDisplay = siteConfig.ceremony.time
-  const [ceremonyMonth = "December", ceremonyDayRaw = "21", ceremonyYear = "2025"] = ceremonyDate.split(" ")
-  const ceremonyDayNumber = ceremonyDayRaw.replace(/[^0-9]/g, "") || "21"
+  const [ceremonyMonth = "June", ceremonyDayRaw = "7", ceremonyYear = "2026"] = ceremonyDate.split(" ")
+  const ceremonyDayNumber = ceremonyDayRaw.replace(/[^0-9]/g, "") || "7"
   
-  // Parse the date: December 21, 2025 at 3:00 PM PH Time (GMT+0800)
+  // Parse the date: June 7, 2026 at 4:15 PM PH Time (GMT+0800)
   // Extract time from "3:00 PM, PH Time" -> "3:00 PM"
   const timeStr = ceremonyTimeDisplay.split(",")[0].trim() // "3:00 PM"
   
   // Create date string in ISO-like format for better parsing
-  // December 21, 2025 -> 2025-12-21
+  // June 7, 2026 -> 2026-06-07
   const monthMap: { [key: string]: string } = {
     "January": "01", "February": "02", "March": "03", "April": "04",
     "May": "05", "June": "06", "July": "07", "August": "08",
@@ -65,7 +116,7 @@ export function Countdown() {
   ))
   
   const targetTimestamp = Number.isNaN(parsedTargetDate.getTime())
-    ? new Date(Date.UTC(2025, 11, 21, 7, 0, 0)).getTime() // Fallback: December 21, 2025, 3:00 PM GMT+8 = 7 AM UTC
+    ? new Date(Date.UTC(2026, 5, 7, 8, 15, 0)).getTime() // Fallback: June 7, 2026, 4:15 PM GMT+8 = 8:15 AM UTC
     : parsedTargetDate.getTime()
 
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({
@@ -103,56 +154,6 @@ export function Countdown() {
     return () => clearInterval(timer)
   }, [targetTimestamp])
 
-  const CountdownUnit = ({ value, label }: { value: number; label: string }) => (
-    <div className="flex flex-col items-center gap-1.5 sm:gap-2 md:gap-2.5">
-      {/* Counter card */}
-      <div className="relative group">
-        {/* Elegant glow on hover */}
-        <div className="absolute -inset-1 bg-[#F5E5D9]/40 rounded-xl sm:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-lg" />
-        
-        {/* Main card - elegant and clean */}
-        <div className="relative bg-[rgba(255,250,239,0.98)] backdrop-blur-md rounded-lg sm:rounded-xl md:rounded-2xl px-3 py-2.5 sm:px-4 sm:py-3.5 md:px-5 md:py-4 lg:px-6 lg:py-5 border border-white/60 shadow-[0_8px_28px_rgba(0,0,0,0.18)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.26)] transition-all duration-300 hover:scale-[1.03] min-w-[52px] sm:min-w-[64px] md:min-w-[76px] lg:min-w-[88px]">
-          {/* Decorative corner accents */}
-          <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-white/70 rounded-tl-lg" />
-          <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-white/70 rounded-tr-lg" />
-          <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-white/70 rounded-bl-lg" />
-          <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-white/70 rounded-br-lg" />
-          
-          {/* Counter */}
-          <div className="relative z-10 flex items-center justify-center">
-            <Counter
-              value={value}
-              places={value >= 100 ? [100, 10, 1] : [10, 1]}
-              fontSize={36}
-              padding={3}
-              gap={2}
-              textColor="#660033"
-              fontWeight={900}
-              horizontalPadding={2}
-              borderRadius={6}
-              gradientHeight={6}
-              gradientFrom="rgba(102,0,51,0.10)"
-              gradientTo="transparent"
-              containerStyle={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-              counterStyle={{
-                fontSize: "clamp(26px, 5.5vw, 48px)",
-              }}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Label - elegant with better contrast */}
-      <span className="text-[10px] sm:text-[11px] md:text-xs lg:text-sm font-semibold text-white uppercase tracking-[0.15em] drop-shadow-sm">
-        {label}
-      </span>
-    </div>
-  )
-
   return (
     <Section
       id="countdown"
@@ -168,20 +169,21 @@ export function Countdown() {
           transition={{ duration: 1, ease: "easeOut" }}
           className="relative"
         >
-          <Image
-            src="/monogram/monogram.png"
-            alt="Jonarelh & Hazel Monogram"
-            width={350}
-            height={350}
-            className="w-40 h-40 sm:w-52 sm:h-52 md:w-64 md:h-64 lg:w-80 lg:h-80 xl:w-96 xl:h-96 opacity-90"
-            style={{
-              filter:
-                "invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(105%) contrast(100%) drop-shadow(0 8px 24px rgba(0,0,0,0.6))",
-            }}
-            priority={false}
-          />
-          {/* Glow effect behind monogram */}
-          <div className="absolute inset-0 blur-3xl bg-[#9B7C6A]/25 -z-10 scale-125" />
+          <div className="relative w-40 h-40 sm:w-52 sm:h-52 md:w-64 md:h-64 lg:w-80 lg:h-80 xl:w-96 xl:h-96 opacity-90">
+            <Image
+              src="/monogram/newMonogram.png"
+              alt="Ced & Kim Monogram"
+              fill
+              className="object-contain"
+              style={{
+                filter:
+                  "invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(105%) contrast(100%) drop-shadow(0 8px 24px rgba(0,0,0,0.6))",
+              }}
+              priority={false}
+            />
+            {/* Glow effect behind monogram */}
+            <div className="absolute inset-0 blur-3xl bg-[#9B7C6A]/25 -z-10 scale-125" />
+          </div>
         </motion.div>
       </div>
 
@@ -189,36 +191,24 @@ export function Countdown() {
       <div className="relative z-10 text-center mb-6 sm:mb-8 md:mb-10 px-3 sm:px-4">
         {/* Decorative element above title */}
         <div className="flex items-center justify-center gap-2 mb-3 sm:mb-4">
-          <div className="w-8 sm:w-12 md:w-16 h-px bg-white/40" />
-          <div className="w-1.5 h-1.5 bg-white/80 rounded-full" />
-          <div className="w-1.5 h-1.5 bg-white/60 rounded-full" />
-          <div className="w-1.5 h-1.5 bg-white/80 rounded-full" />
-          <div className="w-8 sm:w-12 md:w-16 h-px bg-white/40" />
+          <div className="w-8 sm:w-12 md:w-16 h-px bg-white/25" />
+          <div className="w-1.5 h-1.5 bg-[#D1AB6D] rounded-full shadow-[0_0_12px_rgba(209,171,109,0.9)]" />
+          <div className="w-8 sm:w-12 md:w-16 h-px bg-white/25" />
         </div>
         
         <h2 className="imperial-script-regular text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-normal text-white mb-2 sm:mb-3 md:mb-4 drop-shadow-lg">
-        Counting down the days ‘til the big “I do”!
+          Counting down to forever
         </h2>
         
-        <p className="text-xs sm:text-sm md:text-base lg:text-lg text-white font-light max-w-xl mx-auto leading-relaxed px-2">
-          Every passing second brings us closer to the moment we say “always and forever.”
+        <p className="text-xs sm:text-sm md:text-base lg:text-lg text-white/95 font-light max-w-xl mx-auto leading-relaxed px-2">
+          Every sunrise, every heartbeat, every second brings Ced &amp; Kim closer to saying “I do.”
         </p>
         
         {/* Decorative element below subtitle */}
         <div className="flex items-center justify-center gap-2 mt-3 sm:mt-4">
-          <div className="w-1.5 h-1.5 bg-white/80 rounded-full" />
-          <div className="w-1.5 h-1.5 bg-white/60 rounded-full" />
-          <div className="w-1.5 h-1.5 bg-white/80 rounded-full" />
-        </div>
-      </div>
-
-      {/* Countdown Timer - Elegant */}
-      <div className="relative z-10 mb-7 sm:mb-9 md:mb-11 px-3 sm:px-4">
-        <div className="flex justify-center items-center gap-2 sm:gap-2.5 md:gap-3.5 lg:gap-5 flex-wrap max-w-4xl mx-auto">
-          <CountdownUnit value={timeLeft.days} label="Days" />
-          <CountdownUnit value={timeLeft.hours} label="Hours" />
-          <CountdownUnit value={timeLeft.minutes} label="Minutes" />
-          <CountdownUnit value={timeLeft.seconds} label="Seconds" />
+          <div className="w-1 h-1 bg-white/70 rounded-full" />
+          <div className="w-1 h-1 bg-white/40 rounded-full" />
+          <div className="w-1 h-1 bg-white/70 rounded-full" />
         </div>
       </div>
 
@@ -226,8 +216,23 @@ export function Countdown() {
       <div className="relative z-10">
         <div className="flex justify-center px-3 sm:px-4">
           <div className="max-w-2xl w-full">
-         
 
+            {/* Numeric countdown: Days / Hours / Minutes / Seconds */}
+            <div className="mt-2 sm:mt-4 md:mt-6 font-inter">
+              <div className="flex flex-col items-center gap-3 sm:gap-4 md:gap-6">
+                {/* 2x2 on mobile, 4 in a row from md+ */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6 w-full max-w-sm sm:max-w-md md:max-w-xl">
+                  <CountdownUnit value={timeLeft.days} label="Days" />
+                  <CountdownUnit value={timeLeft.hours} label="Hours" />
+                  <CountdownUnit value={timeLeft.minutes} label="Minutes" />
+                  <CountdownUnit value={timeLeft.seconds} label="Seconds" />
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+        
             {/* Date Section - Layout matched with hero date block */}
             <div className="relative sm:rounded-3xl p-6 sm:p-8 md:p-10 mb-6 sm:mb-8">
               <div className="w-full max-w-2xl mx-auto">
@@ -287,8 +292,6 @@ export function Countdown() {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
       </div>
     </Section>
   )

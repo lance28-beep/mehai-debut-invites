@@ -5,7 +5,7 @@
 
 ## Overview
 
-The Entourage feature allows you to manage your wedding party members (Best Man, Maid of Honor, Bridesmaids, Groomsmen, etc.) through the dashboard.
+The Entourage feature allows you to manage your wedding party members (Best Man, Matron of Honor, Bridesmaids, Groomsmen, etc.) through the dashboard.
 
 ## Google Apps Script Implementation
 
@@ -241,7 +241,7 @@ function testUpdateLogic() {
 | Name | RoleCategory | RoleTitle | Email |
 |------|--------------|-----------|-------|
 | John Smith | Wedding Party | Best Man | john@example.com |
-| Jane Doe | Wedding Party | Maid of Honor | jane@example.com |
+| Jane Doe | Wedding Party | Matron of Honor | jane@example.com |
 | Michael Johnson | Wedding Party | Groomsman | michael@example.com |
 | Sarah Williams | Wedding Party | Bridesmaid | sarah@example.com |
 
@@ -249,7 +249,7 @@ function testUpdateLogic() {
 
 - **Name** (Required): Full name of the entourage member
 - **RoleCategory** (Optional): Category grouping (e.g., "Wedding Party", "Family", "Officiant")
-- **RoleTitle** (Optional): Specific role (e.g., "Best Man", "Maid of Honor", "Flower Girl")
+- **RoleTitle** (Optional): Specific role (e.g., "Best Man", "Matron of Honor", "Flower Girl")
 - **Email** (Optional): Contact email for the member
 
 ## Dashboard Features

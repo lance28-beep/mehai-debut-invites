@@ -89,38 +89,55 @@ export function Footer() {
 
   return (
     <footer 
-      className="relative z-20 mt-16 overflow-hidden bg-[#660033]"
+      className="relative z-20 mt-16 overflow-hidden bg-[#525E2C]"
     >
-      {/* Background elements with burgundy motif (similar to other sections) */}
+      {/* Background elements with sage & champagne motif (aligned with other sections) */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {/* Subtle gradient overlays */}
-        <div className="absolute top-0 left-0 w-full h-1/3 bg-gradient-to-b from-[#1A0010]/80 via-[#660033]/60 to-transparent" />
-        <div className="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-[#1A0010]/85 via-[#660033]/55 to-transparent" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(253,236,239,0.16),transparent_55%)] opacity-80" />
+        <div className="absolute top-0 left-0 w-full h-1/3 bg-gradient-to-b from-[#3D4636]/90 via-[#525E2C]/70 to-transparent" />
+        <div className="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-[#3D4636]/95 via-[#525E2C]/70 to-transparent" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(224,207,181,0.28),transparent_55%)] opacity-90" />
       </div>
       
-      {/* Monogram - centered at top */}
-      <div className="relative z-10 flex justify-center pt-8 sm:pt-10 md:pt-12 mb-6 sm:mb-8 md:mb-10">
+      {/* Monogram / Couple Illustration - centered at top */}
+      <div className="relative z-10 flex flex-col items-center pt-8 sm:pt-10 md:pt-12 mb-6 sm:mb-8 md:mb-10">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: "easeOut" }}
           className="relative"
         >
-          <Image
-            src="/monogram/monogram.png"
-            alt={`${siteConfig.couple.groomNickname} & ${siteConfig.couple.brideNickname} Monogram`}
-            width={350}
-            height={350}
-            className="w-40 h-40 sm:w-52 sm:h-52 md:w-64 md:h-64 lg:w-80 lg:h-80 xl:w-96 xl:h-96 opacity-90"
-            priority={false}
-            style={{
-              filter: 'invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(105%) contrast(100%)'
-            }}
-          />
-          {/* Glow effect behind monogram */}
-          <div className="absolute inset-0 blur-3xl bg-white/20 -z-10 scale-125" />
+          <div className="relative w-56 h-56 sm:w-64 sm:h-64 md:w-80 md:h-80 lg:w-[22rem] lg:h-[22rem] xl:w-[26rem] xl:h-[26rem] opacity-95">
+            <Image
+              src="/weddingTimeline/coupleImage-removebg.png"
+              alt={`${siteConfig.couple.groomNickname} & ${siteConfig.couple.brideNickname} illustration`}
+              fill
+              className="object-contain"
+              priority={false}
+              style={{
+                // Convert illustration to a soft #F0F0EE tone to match the footer aesthetic
+                filter:
+                  "brightness(0) saturate(100%) invert(96%) sepia(2%) saturate(320%) hue-rotate(9deg) brightness(102%) contrast(96%)",
+              }}
+            />
+            {/* Glow effect behind monogram */}
+            <div className="absolute inset-0 blur-3xl bg-[#E0CFB5]/35 -z-10 scale-125" />
+          </div>
         </motion.div>
+
+        {/* Names & Date below illustration */}
+        <div className="mt-4 sm:mt-5 md:mt-6 text-center">
+          <p
+            className={`${cormorant.className} tracking-[0.3em] text-[10px] sm:text-xs md:text-sm uppercase text-[#F0F0EE]/95`}
+          >
+            CED &amp; KIM
+          </p>
+          <p
+            className={`${cormorant.className} text-xs sm:text-sm md:text-base text-[#F0F0EE]/90 mt-1`}
+          >
+            {ceremonyDate}
+          </p>
+        </div>
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-3 sm:px-4 md:px-8 pb-8 sm:pb-10 md:pb-12">
@@ -129,8 +146,8 @@ export function Footer() {
           <motion.div className="lg:col-span-2" variants={fadeInUp}>
             <div className="mb-6 sm:mb-8">
               <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-5 md:mb-6">
-                <div className="w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 bg-white/20 rounded-full flex items-center justify-center border border-white/30 flex-shrink-0">
-                  <Heart className="w-5 h-5 sm:w-5.5 sm:h-5.5 md:w-6 md:h-6 text-white" fill="#FDECEF" />
+                <div className="w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 bg-[#F0F0EE]/15 rounded-full flex items-center justify-center border border-[#E0CFB5]/70 flex-shrink-0 shadow-[0_0_22px_rgba(224,207,181,0.55)]">
+                  <Heart className="w-5 h-5 sm:w-5.5 sm:h-5.5 md:w-6 md:h-6 text-[#F0F0EE]" fill="#D1AB6D" />
                 </div>
                 <h3 className="style-script-regular text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-normal text-white drop-shadow-lg">{siteConfig.couple.groomNickname} & {siteConfig.couple.brideNickname}</h3>
               </div>
@@ -146,54 +163,54 @@ export function Footer() {
               </div>
             </div>
 
-            <motion.div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 border border-white/25" whileHover={{ scale: 1.02 }} transition={{ duration: 0.3 }}>
-              <blockquote className={`${cormorant.className} text-white/90 italic text-sm sm:text-base md:text-lg leading-relaxed min-h-[60px] sm:min-h-[70px] md:min-h-[80px]`}>
+            <motion.div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 border border-[#E0CFB5]/60 shadow-[0_18px_45px_rgba(0,0,0,0.45)]" whileHover={{ scale: 1.02 }} transition={{ duration: 0.3 }}>
+              <blockquote className={`${cormorant.className} text-[#F0F0EE] italic text-sm sm:text-base md:text-lg leading-relaxed min-h-[60px] sm:min-h-[70px] md:min-h-[80px]`}>
                 "{displayedText}
                 <span className="inline-block w-0.5 h-4 sm:h-5 md:h-6 bg-white ml-1 animate-pulse">|</span>"
               </blockquote>
               <div className="flex items-center gap-1.5 sm:gap-2 mt-3 sm:mt-4">
-                <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white/70 rounded-full" />
-                <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-[#FDECEF]/70 rounded-full" />
-                <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white/70 rounded-full" />
+                <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-[#D1AB6D]/85 rounded-full" />
+                <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-[#F0F0EE]/85 rounded-full" />
+                <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-[#D1AB6D]/85 rounded-full" />
               </div>
             </motion.div>
           </motion.div>
 
           {/* Event Details quick tiles */}
           <motion.div className="space-y-4 sm:space-y-5 md:space-y-6" variants={fadeInUp}>
-            <motion.div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 border border-white/25 hover:bg-white/15 transition-all duration-300" whileHover={{ y: -5 }}>
+            <motion.div className="bg-white/8 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 border border-[#E0CFB5]/60 hover:bg-white/14 transition-all duration-300 shadow-[0_14px_40px_rgba(0,0,0,0.35)]" whileHover={{ y: -5 }}>
               <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3 mb-3 sm:mb-3.5 md:mb-4">
-                <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-white/20 rounded-full flex items-center justify-center border border-white/30 flex-shrink-0">
-                  <Clock className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 text-white" />
+                <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-[#F0F0EE]/15 rounded-full flex items-center justify-center border border-[#E0CFB5]/70 flex-shrink-0">
+                  <Clock className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 text-[#F0F0EE]" />
                 </div>
                 <h4 className={`${cormorant.className} font-semibold text-base sm:text-lg md:text-xl text-white`}>Ceremony</h4>
               </div>
-              <div className={`space-y-2 sm:space-y-2.5 md:space-y-3 ${cormorant.className} text-white/90 text-xs sm:text-sm`}>
+              <div className={`space-y-2 sm:space-y-2.5 md:space-y-3 ${cormorant.className} text-[#F0F0EE]/95 text-xs sm:text-sm`}>
                 <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3">
-                  <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white flex-shrink-0" />
+                  <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#F0F0EE] flex-shrink-0" />
                   <span>{ceremonyVenue}</span>
                 </div>
                 <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3">
-                  <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white flex-shrink-0" />
+                  <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#F0F0EE] flex-shrink-0" />
                   <span>{ceremonyTime}</span>
                 </div>
               </div>
             </motion.div>
 
-            <motion.div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 border border-white/25 hover:bg-white/15 transition-all duration-300" whileHover={{ y: -5 }}>
+            <motion.div className="bg-white/8 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 border border-[#E0CFB5]/60 hover:bg-white/14 transition-all duration-300 shadow-[0_14px_40px_rgba(0,0,0,0.35)]" whileHover={{ y: -5 }}>
               <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3 mb-3 sm:mb-3.5 md:mb-4">
-                <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-white/20 rounded-full flex items-center justify-center border border-white/30 flex-shrink-0">
-                  <Heart className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 text-white" fill="#FDECEF" />
+                <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-[#F0F0EE]/15 rounded-full flex items-center justify-center border border-[#E0CFB5]/70 flex-shrink-0">
+                  <Heart className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 text-[#F0F0EE]" fill="#D1AB6D" />
                 </div>
                 <h4 className={`${cormorant.className} font-semibold text-base sm:text-lg md:text-xl text-white`}>Reception</h4>
               </div>
-              <div className={`space-y-2 sm:space-y-2.5 md:space-y-3 ${cormorant.className} text-white/90 text-xs sm:text-sm`}>
+              <div className={`space-y-2 sm:space-y-2.5 md:space-y-3 ${cormorant.className} text-[#F0F0EE]/95 text-xs sm:text-sm`}>
                 <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3">
-                  <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white flex-shrink-0" />
+                  <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#F0F0EE] flex-shrink-0" />
                   <span>{receptionVenue}</span>
                 </div>
                 <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3">
-                  <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white flex-shrink-0" />
+                  <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#F0F0EE] flex-shrink-0" />
                   <span>{receptionTime}</span>
                 </div>
               </div>
@@ -204,14 +221,14 @@ export function Footer() {
           <motion.div className="space-y-6 sm:space-y-7 md:space-y-8" variants={fadeInUp}>
             <div>
               <h4 className={`${cormorant.className} font-semibold text-base sm:text-lg md:text-xl mb-4 sm:mb-5 md:mb-6 flex items-center gap-2 sm:gap-2.5 md:gap-3 text-white`}>
-                <div className="w-1.5 sm:w-2 h-6 sm:h-7 md:h-8 bg-white/60 rounded-full" /> Follow Us
+                <div className="w-1.5 sm:w-2 h-6 sm:h-7 md:h-8 bg-[#D1AB6D]/85 rounded-full" /> Follow Us
               </h4>
               <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3 flex-wrap">
                 <a 
                   href="https://www.facebook.com" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="inline-flex items-center justify-center h-10 w-10 sm:h-11 sm:w-11 rounded-full bg-white/10 ring-1 ring-white/30 hover:bg-white/20 hover:ring-white/50 transition-all duration-200 hover:scale-110"
+                  className="inline-flex items-center justify-center h-10 w-10 sm:h-11 sm:w-11 rounded-full bg-white/8 ring-1 ring-[#E0CFB5]/70 hover:bg-white/18 hover:ring-[#F0F0EE] transition-all duration-200 hover:scale-110"
                   aria-label="Facebook"
                 >
                   <Facebook className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
@@ -220,7 +237,7 @@ export function Footer() {
                   href="https://www.instagram.com/" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="inline-flex items-center justify-center h-10 w-10 sm:h-11 sm:w-11 rounded-full bg-white/10 ring-1 ring-white/30 hover:bg-white/20 hover:ring-white/50 transition-all duration-200 hover:scale-110"
+                  className="inline-flex items-center justify-center h-10 w-10 sm:h-11 sm:w-11 rounded-full bg-white/8 ring-1 ring-[#E0CFB5]/70 hover:bg-white/18 hover:ring-[#F0F0EE] transition-all duration-200 hover:scale-110"
                   aria-label="Instagram"
                 >
                   <Instagram className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
@@ -229,7 +246,7 @@ export function Footer() {
                   href="https://www.youtube.com" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="inline-flex items-center justify-center h-10 w-10 sm:h-11 sm:w-11 rounded-full bg-white/10 ring-1 ring-white/30 hover:bg-white/20 hover:ring-white/50 transition-all duration-200 hover:scale-110"
+                  className="inline-flex items-center justify-center h-10 w-10 sm:h-11 sm:w-11 rounded-full bg-white/8 ring-1 ring-[#E0CFB5]/70 hover:bg-white/18 hover:ring-[#F0F0EE] transition-all duration-200 hover:scale-110"
                   aria-label="YouTube"
                 >
                   <Music2 className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
@@ -238,7 +255,7 @@ export function Footer() {
                   href="https://x.com/" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="inline-flex items-center justify-center h-10 w-10 sm:h-11 sm:w-11 rounded-full bg-white/10 ring-1 ring-white/30 hover:bg-white/20 hover:ring-white/50 transition-all duration-200 hover:scale-110"
+                  className="inline-flex items-center justify-center h-10 w-10 sm:h-11 sm:w-11 rounded-full bg-white/8 ring-1 ring-[#E0CFB5]/70 hover:bg-white/18 hover:ring-[#F0F0EE] transition-all duration-200 hover:scale-110"
                   aria-label="Twitter"
                 >
                   <Twitter className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
@@ -250,7 +267,11 @@ export function Footer() {
               <h5 className={`${cormorant.className} font-semibold text-sm sm:text-base md:text-lg mb-3 sm:mb-4 text-white`}>Quick Links</h5>
               <div className="space-y-1.5 sm:space-y-2">
                 {nav.map((item) => (
-                  <a key={item.href} href={item.href} className={`block text-white/90 hover:text-white transition-colors duration-200 ${cormorant.className} text-xs sm:text-sm`}>
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    className={`block text-white/90 hover:text-[#F0F0EE] transition-colors duration-200 ${cormorant.className} text-xs sm:text-sm`}
+                  >
                     {item.label}
                   </a>
                 ))}
@@ -260,34 +281,34 @@ export function Footer() {
         </motion.div>
 
         {/* Bottom Row */}
-        <motion.div className="border-t border-white/20 pt-6 sm:pt-7 md:pt-8" variants={fadeInUp}>
+        <motion.div className="border-t border-[#E0CFB5]/60 pt-6 sm:pt-7 md:pt-8" variants={fadeInUp}>
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-5 md:gap-6">
             <div className="text-center md:text-left">
-              <p className={`text-white/90 ${cormorant.className} text-xs sm:text-sm`}>© {year} {siteConfig.couple.groomNickname} & {siteConfig.couple.brideNickname}. All rights reserved.</p>
-              <p className={`text-white ${cormorant.className} text-xs sm:text-sm mt-0.5 sm:mt-1`}>
+              <p className={`text-[#F0F0EE]/95 ${cormorant.className} text-xs sm:text-sm`}>© {year} {siteConfig.couple.groomNickname} & {siteConfig.couple.brideNickname}. All rights reserved.</p>
+              <p className={`text-[#F0F0EE]/90 ${cormorant.className} text-xs sm:text-sm mt-0.5 sm:mt-1`}>
                 Made with 💕 for our special day
               </p>
             </div>
             
             <div className="text-center md:text-right space-y-0.5 sm:space-y-1">
-              <p className={`text-white/90 ${cormorant.className} text-[10px] sm:text-xs`}>
+              <p className={`text-[#F0F0EE]/90 ${cormorant.className} text-[10px] sm:text-xs`}>
                 Developed by{" "}
                 <a 
                   href="https://lance28-beep.github.io/portfolio-website/" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="text-white hover:text-[#FDECEF] transition-colors duration-200 underline decoration-white/60 hover:decoration-[#FDECEF]/80"
+                  className="text-[#F0F0EE] hover:text-[#D1AB6D] transition-colors duration-200 underline decoration-[#F0F0EE]/60 hover:decoration-[#D1AB6D]/80"
                 >
                   Lance Valle
                 </a>
               </p>
-              <p className={`text-white/90 ${cormorant.className} text-[10px] sm:text-xs`}>
+              <p className={`text-[#F0F0EE]/90 ${cormorant.className} text-[10px] sm:text-xs`}>
                 Want a website like this? Visit{" "}
                 <a 
                   href="https://www.facebook.com/WeddingInvitationNaga" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="text-white hover:text-[#FDECEF] transition-colors duration-200 underline decoration-white/60 hover:decoration-[#FDECEF]/80"
+                  className="text-[#F0F0EE] hover:text-[#D1AB6D] transition-colors duration-200 underline decoration-[#F0F0EE]/60 hover:decoration-[#D1AB6D]/80"
                 >
                   Wedding Invitation Naga
                 </a>

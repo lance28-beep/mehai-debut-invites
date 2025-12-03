@@ -29,14 +29,14 @@ export interface StaggeredMenuProps {
 
 export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
   position = 'right',
-  colors = ['#B28383', '#DDD3CC', '#EDD6AC', '#A78256'],
+  colors = ['#B28383', '#DDD3CC', '#EDD6AC', '#F0F0EE'],
   items = [],
   socialItems = [],
   displaySocials = true,
   displayItemNumbering = true,
   className,
   menuButtonColor = '#EDD6AC',
-  openMenuButtonColor = '#A78256',
+  openMenuButtonColor = '#F0F0EE',
   changeMenuColorOnOpen = true,
   accentColor = '#EDD6AC',
   isFixed = false,
@@ -375,7 +375,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
           <button
             ref={toggleBtnRef}
             className={`sm-toggle relative inline-flex items-center gap-[0.3rem] bg-transparent border-0 cursor-pointer font-medium leading-none overflow-visible pointer-events-auto ${
-              open ? 'text-[#A78256]' : 'text-[#EDD6AC]'
+              open ? 'text-[#F0F0EE]' : 'text-[#EDD6AC]'
             }`}
             aria-label={open ? 'Close menu' : 'Open menu'}
             aria-expanded={open}
@@ -452,7 +452,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
                         href={s.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="sm-socials-link font-medium text-[#A78256] no-underline relative inline-block py-[2px] transition-[color,opacity] duration-300 ease-linear"
+                        className="sm-socials-link font-medium text-[#F0F0EE] no-underline relative inline-block py-[2px] transition-[color,opacity] duration-300 ease-linear"
                         onClick={(e) => handleItemClick(e, s.link)}
                       >
                         {s.label}
@@ -484,7 +484,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 .sm-scope .sm-panel-itemWrap { position: relative; overflow: hidden; line-height: 1; }
 .sm-scope .sm-icon-line { position: absolute; left: 50%; top: 50%; width: 100%; height: 2px; background: currentColor; border-radius: 2px; transform: translate(-50%, -50%); will-change: transform; }
 .sm-scope .sm-line { display: none !important; }
-.sm-scope .staggered-menu-panel { position: absolute; top: 0; right: 0; width: clamp(260px, 38vw, 420px); height: 100%; background: #660033; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); display: flex; flex-direction: column; padding: 6.5em 2.25em 2.25em 2.25em; overflow-y: auto; z-index: 10; }
+.sm-scope .staggered-menu-panel { position: absolute; top: 0; right: 0; width: clamp(260px, 38vw, 420px); height: 100%; background: #909E8D; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); display: flex; flex-direction: column; padding: 6.5em 2.25em 2.25em 2.25em; overflow-y: auto; z-index: 10; }
 .sm-scope [data-position='left'] .staggered-menu-panel { right: auto; left: 0; }
 .sm-scope .sm-prelayers { position: absolute; top: 0; right: 0; bottom: 0; width: clamp(260px, 38vw, 420px); pointer-events: none; z-index: 5; }
 .sm-scope [data-position='left'] .sm-prelayers { right: auto; left: 0; }
@@ -499,14 +499,14 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 .sm-scope .sm-socials-list .sm-socials-link:hover,
 .sm-scope .sm-socials-list .sm-socials-link:focus-visible { opacity: 1; }
 .sm-scope .sm-socials-link:focus-visible { outline: 2px solid var(--sm-accent, #EDD6AC); outline-offset: 3px; }
-.sm-scope .sm-socials-link { font-size: 1rem; font-weight: 500; color: #A78256; text-decoration: none; position: relative; padding: 2px 0; display: inline-block; transition: color 0.3s ease, opacity 0.3s ease; }
+.sm-scope .sm-socials-link { font-size: 1rem; font-weight: 500; color: #F0F0EE; text-decoration: none; position: relative; padding: 2px 0; display: inline-block; transition: color 0.3s ease, opacity 0.3s ease; }
 @media (min-width: 640px) { .sm-scope .sm-socials-link { font-size: 1.05rem; } }
 @media (min-width: 768px) { .sm-scope .sm-socials-link { font-size: 1.1rem; } }
 @media (min-width: 1024px) { .sm-scope .sm-socials-link { font-size: 1.25rem; } }
 .sm-scope .sm-socials-link:hover { color: var(--sm-accent, #EDD6AC); }
-.sm-scope .sm-panel-title { margin: 0; font-size: 1rem; font-weight: 600; color: #A78256; text-transform: uppercase; }
+.sm-scope .sm-panel-title { margin: 0; font-size: 1rem; font-weight: 600; color: #F0F0EE; text-transform: uppercase; }
 .sm-scope .sm-panel-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.75rem; }
-.sm-scope .sm-panel-item { position: relative; color: #A78256; font-weight: 600; font-size: 2.1rem; cursor: pointer; line-height: 1.1; letter-spacing: -1px; text-transform: uppercase; transition: background 0.25s, color 0.25s; display: inline-block; text-decoration: none; padding-right: 1.4em; }
+.sm-scope .sm-panel-item { position: relative; color: #F0F0EE; font-weight: 600; font-size: 2.1rem; cursor: pointer; line-height: 1.1; letter-spacing: -1px; text-transform: uppercase; transition: background 0.25s, color 0.25s; display: inline-block; text-decoration: none; padding-right: 1.4em; }
 @media (min-width: 640px) { .sm-scope .sm-panel-item { font-size: 2.6rem; letter-spacing: -1.2px; } }
 @media (min-width: 768px) { .sm-scope .sm-panel-item { font-size: 3.1rem; letter-spacing: -1.5px; } }
 @media (min-width: 1024px) { .sm-scope .sm-panel-item { font-size: 4.1rem; letter-spacing: -2px; } }

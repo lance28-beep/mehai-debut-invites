@@ -5,52 +5,42 @@ import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import { Navbar } from "@/components/navbar"
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jonarelh-and-hazel-invitation.netlify.app/"
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://kim-angel-and-cedric-john-wedding.com/"
 const canonicalUrl = siteUrl.replace(/\/$/, "")
-const eventImagePath = "/invitation/thumbnail.jpg"
+const eventImagePath = "/desktop-background/couple 1.JPG"
 const eventImageUrl = `${canonicalUrl}${eventImagePath}`
-const eventTitle = "Jonarelh & Hazel - Wedding Invitation"
+const eventTitle = "Cedric John & Kim Angel - Wedding Invitation"
 const eventDescription =
-  "Celebrate the wedding of Jonarelh and Hazel on December 21, 2025 in Kibawe, Bukidnon. RSVP, explore their love story, view the gallery, and find everything you need to join the celebration."
+  "Celebrate the wedding of Kim Angel Manlolo and Cedric John Sta. Lucia on June 7, 2026 at Patio Luisa. RSVP, explore their story, and find everything you need to join the celebration."
 
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Event",
-  name: "Jonarelh & Hazel Wedding",
-  startDate: "2025-12-21T12:30:00+08:00",
-  endDate: "2025-12-21T21:00:00+08:00",
+  name: "Cedric John & Kim Angel Wedding",
+  startDate: "2026-06-07T15:45:00+08:00",
+  endDate: "2026-06-07T21:30:00+08:00",
   eventStatus: "https://schema.org/EventScheduled",
   eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
   location: [
     {
       "@type": "Place",
-      name: "Gutapol SDA Church",
+      name: "Patio Luisa",
       address: {
         "@type": "PostalAddress",
-        streetAddress: "Gutapol, Kibawe",
-        addressLocality: "Bukidnon",
-        addressCountry: "PH",
-      },
-    },
-    {
-      "@type": "Place",
-      name: "Kibawe Function Hall",
-      address: {
-        "@type": "PostalAddress",
-        streetAddress: "Kibawe",
-        addressLocality: "Bukidnon",
+        streetAddress: "Patio Luisa",
+        addressLocality: "",
         addressCountry: "PH",
       },
     },
   ],
   image: [eventImageUrl],
   description:
-    "You're invited to the wedding of Jonarelh & Hazel on December 21, 2025 in Kibawe, Bukidnon. Find ceremony and reception details, RSVP information, and their full love story.",
+    "You're invited to the wedding of Cedric John & Kim Angel on June 7, 2026 at Patio Luisa. Find ceremony and reception details, RSVP information, and their full love story.",
   organizer: {
     "@type": "Person",
-    name: "Jonarelh & Hazel",
+    name: "Cedric John & Kim Angel",
   },
-  eventHashtag: "#WalaPaMeyHashtagManHAHAHAHAHAHHAA",
+  eventHashtag: "#KimAndCedSayIDo",
 }
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
@@ -61,13 +51,13 @@ export const metadata: Metadata = {
   title: eventTitle,
   description: eventDescription,
   keywords:
-    "Jonarelh Hazel wedding, Kibawe Bukidnon wedding, Gutapol SDA Church, Kibawe Function Hall, wedding invitation, RSVP, wedding gallery, message wall, love story, #WalaPaMeyHashtagManHAHAHAHAHAHHAA",
+    "Kim Angel Cedric John wedding, Patio Luisa wedding, wedding invitation, RSVP, wedding gallery, message wall, love story, #KimAndCedSayIDo",
   authors: [
-    { name: "Jonarelh" },
-    { name: "Hazel" },
+    { name: "Kim Angel Manlolo" },
+    { name: "Cedric John Sta. Lucia" },
   ],
-  creator: "Jonarelh & Hazel",
-  publisher: "Jonarelh & Hazel",
+  creator: "Cedric John & Kim Angel",
+  publisher: "Cedric John & Kim Angel",
   formatDetection: {
     email: false,
     address: false,
@@ -97,11 +87,11 @@ export const metadata: Metadata = {
   },
   manifest: "/favicon_io/site.webmanifest",
   openGraph: {
-    title: "Jonarelh & Hazel Wedding | December 21, 2025",
+    title: "Cedric John & Kim Angel Wedding | June 7, 2026",
     description:
-      "Celebrate the union of Jonarelh & Hazel on December 21, 2025 in Kibawe, Bukidnon. Discover their love story, RSVP, and find important details for the ceremony and reception.",
+      "Celebrate the union of Cedric John & Kim Angel on June 7, 2026 at Patio Luisa. Discover their story, RSVP, and find important details for the ceremony and reception.",
     url: canonicalUrl,
-    siteName: "Jonarelh and Hazel Wedding",
+    siteName: "Kim Angel and Cedric John Wedding",
     locale: "en_PH",
     type: "website",
     images: [
@@ -110,17 +100,17 @@ export const metadata: Metadata = {
         url: eventImageUrl,
         width: 1200,
         height: 630,
-        alt: "Jonarelh & Hazel Wedding Invitation - December 21, 2025",
+        alt: "Cedric John & Kim Angel Wedding Invitation - June 7, 2026",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Jonarelh & Hazel Wedding Invitation",
+    title: "Cedric John & Kim Angel Wedding Invitation",
     description:
-      "You're invited to the wedding of Jonarelh & Hazel on December 21, 2025. RSVP, explore their story, and get all the details for the big day! #WalaPaMeyHashtagManHAHAHAHAHAHHAA",
+      "You're invited to the wedding of Cedric John & Kim Angel on June 7, 2026. RSVP, explore their story, and get all the details for the big day! #KimAndCedSayIDo",
     images: [eventImageUrl],
-    creator: "@jonarelhandhazel",
+    creator: "@kimandced",
   },
   robots: {
     index: true,
@@ -149,7 +139,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <meta name="theme-color" content="#660033" />
+        <meta name="theme-color" content="#525E2C" />
         <link rel="icon" href="/favicon.ico" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

@@ -25,7 +25,7 @@ const ROLE_CATEGORY_ORDER = [
   "Family of the Groom",
   "Family of the Bride",
   "Best Man",
-  "Maid of Honor",
+  "Matron of Honor",
   "Candle Sponsors",
   "Cord Sponsors",
   "Groomsmen",
@@ -129,7 +129,9 @@ export function Entourage() {
     const textAlign =
       align === "right" ? "text-right" : align === "left" ? "text-left" : "text-center"
     return (
-      <h3 className={`relative ${cormorant.className} text-[10px] sm:text-xs md:text-sm lg:text-base font-semibold uppercase text-[#F5E5D9]/90 mb-1.5 sm:mb-2 md:mb-3 tracking-[0.1em] sm:tracking-[0.15em] ${textAlign} ${className} transition-all duration-300`}>
+       <h3
+         className={`relative ${cormorant.className} text-xs sm:text-sm md:text-base lg:text-lg font-extrabold uppercase text-[#111814] mb-2 sm:mb-2.5 md:mb-3 tracking-[0.14em] sm:tracking-[0.18em] ${textAlign} ${className} transition-all duration-300 whitespace-nowrap`}
+       >
         {children}
       </h3>
     )
@@ -150,15 +152,21 @@ export function Entourage() {
     const textAlign =
       align === "right" ? "text-right" : align === "left" ? "text-left" : "text-center"
     return (
-      <div className={`relative flex flex-col ${containerAlign} justify-center py-1 sm:py-1.5 md:py-2.5 leading-snug sm:leading-relaxed group/item transition-all duration-300 hover:scale-[1.02] sm:hover:scale-[1.03]`}>
+      <div
+        className={`relative flex flex-col ${containerAlign} justify-center py-1 sm:py-1.5 md:py-2 leading-snug sm:leading-relaxed group/item transition-all duration-300 hover:scale-[1.02] sm:hover:scale-[1.03]`}
+      >
         {/* Hover highlight effect */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#FDECEF]/0 via-[#FDECEF]/10 to-[#FDECEF]/0 opacity-0 group-hover/item:opacity-100 transition-opacity duration-300 rounded-md" />
-        
-        <p className={`relative text-white text-[11px] sm:text-[13px] md:text-sm lg:text-base font-semibold ${textAlign} group-hover/item:text-[#FDECEF] transition-all duration-300`}>
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#E0CFB5]/35 to-transparent opacity-0 group-hover/item:opacity-100 transition-opacity duration-300 rounded-md" />
+
+        <p
+          className={`relative text-[#243127] text-[11px] sm:text-[13px] md:text-sm lg:text-base font-semibold ${textAlign} group-hover/item:text-[#1A231C] transition-all duration-300`}
+        >
           {member.Name}
         </p>
         {showRole && member.RoleTitle && (
-          <p className={`relative text-[#F5E5D9] text-[9px] sm:text-[10px] md:text-[11px] lg:text-xs font-medium mt-0.5 leading-tight sm:leading-snug ${textAlign} tracking-wide uppercase group-hover/item:text-[#FDECEF] transition-colors duration-300`}>
+          <p
+            className={`relative text-[#556457] text-[9px] sm:text-[10px] md:text-[11px] lg:text-xs font-medium mt-0.5 leading-tight sm:leading-snug ${textAlign} tracking-wide uppercase group-hover/item:text-[#37413A] transition-colors duration-300`}
+          >
             {member.RoleTitle}
           </p>
         )}
@@ -212,29 +220,32 @@ export function Entourage() {
     <section
       ref={sectionRef}
       id="entourage"
-      className="relative py-12 md:py-16 lg:py-20 overflow-hidden bg-[#660033]"
+      className="relative py-12 md:py-16 lg:py-20 overflow-hidden bg-[#909E8D]"
     >
-      {/* Background elements with burgundy motif (same as details section) */}
+      {/* Background elements with elegant sage motif (aligned with narrative section) */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Subtle gradient overlays */}
-        <div className="absolute top-0 left-0 w-full h-1/3 bg-gradient-to-b from-[#1A0010]/80 via-[#660033]/60 to-transparent" />
-        <div className="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-[#1A0010]/85 via-[#660033]/55 to-transparent" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(253,236,239,0.16),transparent_55%)] opacity-80" />
+        {/* Vertical sage gradients to frame the entourage */}
+        <div className="absolute top-0 left-0 w-full h-1/3 bg-gradient-to-b from-[#3D4636]/90 via-[#909E8D]/75 to-transparent" />
+        <div className="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-[#3D4636]/95 via-[#909E8D]/70 to-transparent" />
+        {/* Soft radial light in warm neutrals */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(224,207,181,0.28),transparent_55%)] opacity-90" />
+        {/* Subtle diagonal wash of muted sage */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#909E8D]/25 via-transparent to-[#F0F0EE]/10 mix-blend-soft-light" />
       </div>
 
       {/* Section Header */}
       <div className={`relative z-30 text-center mb-6 sm:mb-9 md:mb-12 px-3 sm:px-4 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'}`}>
         {/* Small label */}
         <p
-          className={`${cormorant.className} text-[0.7rem] sm:text-xs md:text-sm uppercase tracking-[0.28em] text-[#FDECEF]/85 mb-2`}
-          style={{ textShadow: "0 2px 10px rgba(0,0,0,0.6)" }}
+          className={`${cormorant.className} text-[0.7rem] sm:text-xs md:text-sm uppercase tracking-[0.28em] text-white mb-2`}
+          style={{ textShadow: "0 2px 10px rgba(0,0,0,0.8)" }}
         >
-          Those who stand with us
+          Those who stand with Kim &amp; Ced
         </p>
 
         <h2
           className="style-script-regular text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white mb-1.5 sm:mb-3 md:mb-4"
-          style={{ textShadow: "0 4px 18px rgba(0,0,0,0.85)" }}
+          style={{ textShadow: "0 4px 18px rgba(0,0,0,0.9)" }}
         >
           Wedding Entourage
         </h2>
@@ -248,9 +259,13 @@ export function Entourage() {
       </div>
 
       {/* Central Card Container */}
-      <div className={`relative z-30 max-w-4xl mx-auto px-3 sm:px-5 transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-        {/* Card with burgundy theme - matching details section */}
-        <div className="relative bg-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl overflow-hidden border border-[#FDECEF]/25 shadow-[0_20px_60px_rgba(0,0,0,0.45)] transition-all duration-500 group">
+      <div
+        className={`relative z-30 max-w-4xl mx-auto px-3 sm:px-5 transition-all duration-1000 delay-300 ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+        }`}
+      >
+        {/* Card with sage & champagne theme */}
+        <div className="relative bg-[#F7F5F1]/95 backdrop-blur-md rounded-xl sm:rounded-2xl overflow-hidden border border-[#E0CFB5]/80 shadow-[0_20px_60px_rgba(0,0,0,0.45)] transition-all duration-500 group">
           {/* Card content */}
           <div className="relative p-3 sm:p-6 md:p-8 z-10">
             {isLoading ? (
@@ -352,7 +367,7 @@ export function Entourage() {
                             </div>
                           </div>
                         )}
-                        <TwoColumnLayout leftTitle="Parents of the Groom" rightTitle="Parents of the Bride">
+                        <TwoColumnLayout leftTitle="Groom’s Parents" rightTitle="Bride’s Parents">
                           {(() => {
                             const leftArr = sortParents(parentsGroom)
                             const rightArr = sortParents(parentsBride)
@@ -431,10 +446,10 @@ export function Entourage() {
                   return null
                 }
 
-                // Special handling for Maid of Honor and Best Man - combine into single two-column layout
-                if (category === "Maid of Honor" || category === "Best Man") {
+                // Special handling for Matron of Honor and Best Man - combine into single two-column layout
+                if (category === "Matron of Honor" || category === "Best Man") {
                   // Get both honor attendant groups
-                  const maidOfHonor = grouped["Maid of Honor"] || []
+                  const maidOfHonor = grouped["Matron of Honor"] || []
                   const bestMan = grouped["Best Man"] || []
                   
                   // Only render once (when processing "Best Man")
@@ -478,7 +493,7 @@ export function Entourage() {
                       </div>
                     )
                   }
-                  // Skip rendering for "Maid of Honor" since it's already rendered above
+                  // Skip rendering for "Matron of Honor" since it's already rendered above
                   return null
                 }
 
