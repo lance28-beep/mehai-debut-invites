@@ -451,15 +451,6 @@ export function Hero() {
         >
           {/* Main Invitation Text */}
           <div className="space-y-2 sm:space-y-3 md:space-y-4">
-            <p
-              className={`${cormorant.className} text-[0.7rem] sm:text-xs md:text-sm lg:text-base uppercase tracking-[0.24em] sm:tracking-[0.28em] text-[#FDECEF]/95 font-normal leading-relaxed px-4`}
-              style={{
-                textShadow: "0 2px 14px rgba(0,0,0,0.7)",
-              }}
-            >
-              You are cordially invited to celebrate the wedding of
-            </p>
-
             {/* Names & Tagline */}
             <h1
               className={`${cormorant.className} text-xs sm:text-sm md:text-base tracking-[0.4em] uppercase font-light text-center`}
@@ -468,17 +459,8 @@ export function Hero() {
                 textShadow: "0 2px 8px rgba(0,0,0,0.7)",
               }}
             >
-              WE DO
+              We do always and forevermore
             </h1>
-            <p
-              className={`${windSong.className} text-2xl sm:text-3xl md:text-4xl lg:text-5xl tracking-wide drop-shadow-2xl`}
-              style={{
-                color: '#FDF8F5',
-                textShadow: "0 0 18px rgba(0,0,0,0.8)",
-              }}
-            >
-              always and forever
-            </p>
             <h1
               className="style-script-regular text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl drop-shadow-2xl"
               style={{
@@ -565,8 +547,19 @@ export function Hero() {
             </p>
           </div>
 
-          {/* Call-to-action buttons */}
-          <div className="pt-3 sm:pt-4 md:pt-5 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch max-w-2xl mx-auto w-full px-4">
+          {/* Call-to-action section */}
+          <div className="pt-3 sm:pt-4 md:pt-5 flex flex-col gap-3 sm:gap-4 items-center max-w-2xl mx-auto w-full px-4">
+            <p
+              className={`${cormorant.className} text-[0.7rem] sm:text-xs md:text-sm lg:text-base uppercase tracking-[0.24em] sm:tracking-[0.28em] text-[#FDECEF]/95 font-normal leading-relaxed text-center px-4`}
+              style={{
+                textShadow: "0 2px 14px rgba(0,0,0,0.7)",
+              }}
+            >
+              You are cordially invited to celebrate the wedding of
+            </p>
+
+            {/* Call-to-action buttons */}
+            <div className="w-full flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch">
             <a
               href="#guest-list"
               className={`${cormorant.className} group relative flex-1 sm:min-w-[200px] md:min-w-[220px] rounded-lg overflow-hidden transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.45)] focus-visible:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FDECEF]/50`}
@@ -612,6 +605,7 @@ export function Hero() {
                 style={{ width: "50%", left: "-100%" }}
               />
             </a>
+            </div>
           </div>
         </div>
       </div>
