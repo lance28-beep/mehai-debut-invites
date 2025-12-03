@@ -555,7 +555,7 @@ export function Hero() {
                 textShadow: "0 2px 14px rgba(0,0,0,0.7)",
               }}
             >
-              You are cordially invited to celebrate the wedding of
+              You are cordially Invited
             </p>
 
             {/* Call-to-action buttons */}
