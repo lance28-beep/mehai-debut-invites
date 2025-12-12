@@ -80,10 +80,8 @@ export function Footer() {
 
   const nav = [
     { label: "Home", href: "#home" },
-    { label: "Our Story", href: "#narrative" },
     { label: "Events", href: "#details" },
     { label: "Gallery", href: "#gallery" },
-    { label: "Snap & Share", href: "#snap-share" },
     { label: "RSVP", href: "#guest-list" },
   ] as const
 

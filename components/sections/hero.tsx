@@ -601,26 +601,6 @@ export function Hero() {
                 Confirm Attendance
               </span>
             </a>
-            <a
-              href="#messages"
-              className={`${cormorant.className} group relative flex-1 sm:min-w-[200px] md:min-w-[220px] rounded-lg overflow-hidden transition-all duration-300 hover:-translate-y-1 focus-visible:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FADDE0]/60`}
-              style={{
-                backgroundColor: "#FADDE0",
-                boxShadow: "0 10px 24px rgba(0,0,0,0.35)",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "#F3C5CA";
-                e.currentTarget.style.boxShadow = "0 12px 28px rgba(0,0,0,0.4)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "#FADDE0";
-                e.currentTarget.style.boxShadow = "0 10px 24px rgba(0,0,0,0.35)";
-              }}
-            >
-              <span className="relative z-10 inline-flex h-full min-h-[3rem] sm:min-h-[3.25rem] w-full items-center justify-center px-6 sm:px-8 text-[0.65rem] sm:text-[0.7rem] md:text-xs uppercase tracking-[0.32em] sm:tracking-[0.36em] text-[#2F1C1C] font-semibold transition-all duration-300" style={{ textShadow: "0 1px 6px rgba(255,255,255,0.6)" }}>
-                Read Our Story
-              </span>
-            </a>
             </div>
           </div>
         </div>

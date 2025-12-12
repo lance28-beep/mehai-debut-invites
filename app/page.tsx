@@ -7,7 +7,6 @@ import { Hero as MainHero } from "@/components/sections/hero"
 import { Welcome } from "@/components/sections/welcome"
 import { Countdown } from "@/components/sections/countdown"
 import { WeddingTimeline } from "@/components/sections/wedding-timeline"
-import { Narrative } from "@/components/sections/narrative"
 import { Gallery } from "@/components/sections/gallery"
 import { Messages } from "@/components/sections/messages"
 import { Details } from "@/components/sections/details"
@@ -16,7 +15,6 @@ import { PrincipalSponsors } from "@/components/sections/principal-sponsors"
 import { BookOfGuests } from "@/components/sections/book-of-guests"
 import { Registry } from "@/components/sections/registry"
 import { FAQ } from "@/components/sections/faq"
-import { SnapShare } from "@/components/sections/snap-share"
 import { Footer } from "@/components/sections/footer"
 import { Hero as InvitationHero } from "@/components/loader/Hero"
 import { LoadingScreen } from "@/components/loader/LoadingScreen"
@@ -64,7 +62,6 @@ export default function Home() {
               <Welcome />
               {/* <CoupleVideo /> */}
               <Countdown />
-              <Narrative />
               <Gallery />
               <Messages />
               <Details />
@@ -75,7 +72,6 @@ export default function Home() {
               <BookOfGuests />
               <Registry />
               <FAQ />
-              <SnapShare />
               <Footer />
             </div>
           </div>

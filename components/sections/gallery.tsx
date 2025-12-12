@@ -6,6 +6,7 @@ import { X, ChevronLeft, ChevronRight } from "lucide-react"
 import { Section } from "@/components/section"
 import { motion } from "motion/react"
 import { Cormorant_Garamond, WindSong } from "next/font/google"
+import { siteConfig } from "@/content/site"
 // Removed circular gallery in favor of a responsive masonry layout
 
 const cormorant = Cormorant_Garamond({
@@ -31,6 +32,8 @@ const galleryItems = [
 ]
 
 export function Gallery() {
+  const { groomNickname, brideNickname } = siteConfig.couple
+  const coupleDisplayName = `${groomNickname} & ${brideNickname}`
   const [selectedImage, setSelectedImage] = useState<(typeof galleryItems)[0] | null>(null)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
@@ -141,13 +144,13 @@ export function Gallery() {
             className={`${cormorant.className} text-[0.7rem] sm:text-xs md:text-sm uppercase tracking-[0.28em] text-white`}
             style={{ textShadow: "0 2px 10px rgba(0,0,0,0.75)" }}
           >
-            Moments with Marzan &amp; Nica
+            Moments with {coupleDisplayName}
           </p>
           <h2
             className="style-script-regular text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white"
             style={{ textShadow: "0 4px 18px rgba(0,0,0,0.9)" }}
           >
-            A glimpse into our story
+            Prenup Photos
           </h2>
         </div>
 

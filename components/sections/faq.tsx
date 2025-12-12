@@ -74,18 +74,8 @@ export function FAQ() {
   return (
     <Section
       id="faq"
-      className="relative py-12 md:py-16 lg:py-20 overflow-hidden bg-[#D2A4A4]"
+      className="relative py-12 md:py-16 lg:py-20 overflow-hidden bg-transparent"
     >
-      {/* Background elements with elegant sage green motif (aligned with narrative section) */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Vertical sage gradients to frame the FAQ */}
-        <div className="absolute top-0 left-0 w-full h-1/3 bg-gradient-to-b from-[#D3B9A2]/92 via-[#D2A4A4]/78 to-transparent" />
-        <div className="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-[#D3B9A2]/95 via-[#D2A4A4]/72 to-transparent" />
-        {/* Soft radial light in warm neutrals */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(224,207,181,0.28),transparent_55%)] opacity-90" />
-        {/* Subtle diagonal wash of muted sage */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#6E7A61]/24 via-transparent to-[#F7E6CA]/12 mix-blend-soft-light" />
-      </div>
 
       {/* Section Header */}
       <div className="relative z-30 text-center mb-6 sm:mb-9 md:mb-12 px-3 sm:px-4">
@@ -115,7 +105,7 @@ export function FAQ() {
       {/* FAQ content */}
       <div className="relative z-30 max-w-4xl mx-auto px-3 sm:px-5">
         {/* Main card */}
-        <div className="relative bg-white/10 backdrop-blur-md border border-[#F7E6CA]/60 rounded-lg sm:rounded-xl md:rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.45)] overflow-hidden">
+        <div className="relative bg-[#D2A4A4] border border-black/10 rounded-lg sm:rounded-xl md:rounded-2xl shadow-sm overflow-hidden">
           {/* FAQ items */}
           <div className="relative p-2.5 sm:p-4 md:p-5 lg:p-6">
             <div className="space-y-1.5 sm:space-y-2 md:space-y-3">
@@ -125,7 +115,7 @@ export function FAQ() {
                 return (
                   <div
                     key={index}
-                    className="rounded-lg sm:rounded-xl border border-[#F7E6CA]/40 bg-white/5 backdrop-blur-sm hover:border-[#F7E6CA]/70 hover:bg-white/10 transition-all duration-300 hover:shadow-md overflow-hidden"
+                    className="rounded-lg sm:rounded-xl border border-black/10 bg-transparent hover:border-black/20 transition-all duration-300 overflow-hidden"
                   >
                     <button
                       onClick={() => toggleItem(index)}
@@ -151,7 +141,7 @@ export function FAQ() {
                       }`}
                     >
                       <div className="overflow-hidden">
-                        <div className="px-2.5 sm:px-3 md:px-4 lg:px-5 py-2 sm:py-2.5 md:py-3 lg:py-4 bg-white/5 border-t border-[#F7E6CA]/30">
+                        <div className="px-2.5 sm:px-3 md:px-4 lg:px-5 py-2 sm:py-2.5 md:py-3 lg:py-4 bg-transparent border-t border-black/10">
                           {item.answer.includes("[RSVP_LINK]") ? (
                             <p className={`${cormorant.className} text-white font-semibold leading-relaxed sm:leading-loose text-sm sm:text-base md:text-lg lg:text-xl whitespace-pre-line tracking-wide`}>
                               {item.answer.split("[RSVP_LINK]")[0]}
