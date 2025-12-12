@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 
 // You'll need to replace this with your GuestWish Google Apps Script URL
-const GUEST_WISH_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz-o4iAt4SOox9UWAsnMlciKNyPNoKMen57qPEYkaxLWsbJpFuaa9MWjT-vlOBzsoCe/exec'
+const GUEST_WISH_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyEcPjQQ5aoLGqwlUaxTDvHIJCS4GgryL3GqnQjXHzC5KFZ9ZVGiGgAQsqQEqrGr_9g/exec'
 
 // Guest Request interface for WishGuest sheet
 export interface GuestRequest {
@@ -205,4 +205,3 @@ export async function DELETE(request: NextRequest) {
     )
   }
 }
-

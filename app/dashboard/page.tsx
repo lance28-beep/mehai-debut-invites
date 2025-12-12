@@ -534,6 +534,68 @@ export default function DashboardPage() {
     setRequestToAdd(null)
   }
 
+  const handleEditRequestClick = (request: GuestRequest) => {
+    setEditingRequest(request)
+    setRequestFormData({
+      Name: request.Name,
+      Email: request.Email && request.Email !== "Pending" ? request.Email : "",
+      Phone: request.Phone || "",
+      RSVP: request.RSVP || "",
+      Guest: request.Guest || "1",
+      Message: request.Message || "",
+    })
+  }
+
+  const handleUpdateRequest = async () => {
+    if (!editingRequest || !requestFormData.Name) {
+      setError("Name is required")
+      setTimeout(() => setError(null), 3000)
+      return
+    }
+
+    setIsLoading(true)
+    setError(null)
+    setSuccessMessage(null)
+
+    try {
+      const response = await fetch("/api/guest-requests", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          Name: requestFormData.Name,
+          Email: requestFormData.Email,
+          Phone: requestFormData.Phone,
+          RSVP: requestFormData.RSVP,
+          Guest: requestFormData.Guest,
+          Message: requestFormData.Message,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to update request")
+      }
+
+      setSuccessMessage("Request updated successfully!")
+      setTimeout(() => setSuccessMessage(null), 3000)
+      setEditingRequest(null)
+      setRequestFormData({ Name: "", Email: "", Phone: "", RSVP: "", Guest: "", Message: "" })
+      await fetchGuestRequests()
+    } catch (error) {
+      console.error("Error updating request:", error)
+      setError("Failed to update request")
+      setTimeout(() => setError(null), 3000)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleCancelEditRequest = () => {
+    setEditingRequest(null)
+    setRequestFormData({ Name: "", Email: "", Phone: "", RSVP: "", Guest: "", Message: "" })
+  }
+
   const handleDeleteRequest = async (requestName: string) => {
     setIsLoading(true)
     setError(null)
@@ -1331,6 +1393,13 @@ export default function DashboardPage() {
                           <td className="px-6 py-4 text-center">
                             <div className="flex items-center justify-center gap-2">
                               <button
+                                onClick={() => handleEditRequestClick(request)}
+                                className="p-2 text-[#3D5033] hover:bg-[#F7E6CA]/30 rounded-lg transition-colors"
+                                title="Edit request"
+                              >
+                                <Edit2 className="h-4 w-4" />
+                              </button>
+                              <button
                                 onClick={() => handleAddRequestToGuestListClick(request)}
                                 className="px-4 py-2 bg-[#E0B4B1] hover:bg-[#A5B4A3] text-black rounded-lg transition-colors font-semibold text-sm flex items-center gap-2 shadow-md hover:shadow-lg border border-[#F0F0EE]/60"
                                 title="Add to guest list"
@@ -1651,6 +1720,17 @@ export default function DashboardPage() {
         onSave={editingPrincipalSponsor ? handleUpdatePrincipalSponsor : handleAddPrincipalSponsor}
       />
 
+      {/* Edit Request Modal */}
+      <EditRequestModal
+        open={!!editingRequest}
+        request={editingRequest}
+        formData={requestFormData}
+        setFormData={setRequestFormData}
+        isLoading={isLoading}
+        onClose={handleCancelEditRequest}
+        onSave={handleUpdateRequest}
+      />
+
       {/* Add to Guest List Confirmation Modal */}
       <AddToGuestListModal
         open={showAddToGuestListModal}
@@ -1671,6 +1751,144 @@ export default function DashboardPage() {
           if (confirmActionRef.current) confirmActionRef.current()
         }}
       />
+    </div>
+  )
+}
+
+// Edit Request Modal Component
+function EditRequestModal({
+  open,
+  request,
+  formData,
+  setFormData,
+  isLoading,
+  onClose,
+  onSave,
+}: {
+  open: boolean
+  request: GuestRequest | null
+  formData: { Name: string; Email: string; Phone: string; RSVP: string; Guest: string; Message: string }
+  setFormData: (data: { Name: string; Email: string; Phone: string; RSVP: string; Guest: string; Message: string }) => void
+  isLoading: boolean
+  onClose: () => void
+  onSave: () => void
+}) {
+  if (!open || !request) return null
+
+  return (
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+      <div className="w-full max-w-2xl bg-[#F0F0EE] rounded-2xl shadow-2xl border border-[#F7E6CA]/70 max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-[#F7E6CA]/70 px-6 py-4 border-b border-[#E9D5C3]/70 rounded-t-2xl">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xl font-bold text-[#2F3724] font-sans">Edit Guest Request</h3>
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-[#E9D5C3]/40 rounded-lg transition-colors text-[#2F3724]/70 hover:text-[#2F3724]"
+            >
+              <XCircle className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+        <div className="p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-[#2F3724] mb-2 font-sans">
+                Name *
+              </label>
+              <input
+                type="text"
+                value={formData.Name}
+                onChange={(e) => setFormData({ ...formData, Name: e.target.value })}
+                className="w-full px-4 py-2 border-2 border-[#F7E6CA]/70 focus:border-[#E9D5C3] rounded-xl text-sm font-sans text-black placeholder:text-[#2F3724]/40 transition-all duration-300 focus:ring-4 focus:ring-[#E9D5C3]/20 bg-white"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[#2F3724] mb-2 font-sans">
+                Email
+              </label>
+              <input
+                type="email"
+                value={formData.Email}
+                onChange={(e) => setFormData({ ...formData, Email: e.target.value })}
+                className="w-full px-4 py-2 border-2 border-[#F7E6CA]/70 focus:border-[#E9D5C3] rounded-xl text-sm font-sans text-black placeholder:text-[#2F3724]/40 transition-all duration-300 focus:ring-4 focus:ring-[#E9D5C3]/20 bg-white"
+                placeholder="email@example.com"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[#2F3724] mb-2 font-sans">
+                Phone
+              </label>
+              <input
+                type="tel"
+                value={formData.Phone}
+                onChange={(e) => setFormData({ ...formData, Phone: e.target.value })}
+                className="w-full px-4 py-2 border-2 border-[#F7E6CA]/70 focus:border-[#E9D5C3] rounded-xl text-sm font-sans text-black placeholder:text-[#2F3724]/40 transition-all duration-300 focus:ring-4 focus:ring-[#E9D5C3]/20 bg-white"
+                placeholder="Phone number"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[#2F3724] mb-2 font-sans">
+                RSVP Status
+              </label>
+              <select
+                value={formData.RSVP}
+                onChange={(e) => setFormData({ ...formData, RSVP: e.target.value })}
+                className="w-full px-4 py-2 border-2 border-[#F7E6CA]/70 focus:border-[#E9D5C3] rounded-xl text-sm font-sans text-black bg-white transition-all duration-300 focus:ring-4 focus:ring-[#E9D5C3]/20"
+              >
+                <option value="">Select status</option>
+                <option value="Yes">Attending</option>
+                <option value="No">Not Attending</option>
+                <option value="Maybe">Maybe</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[#2F3724] mb-2 font-sans">
+                Number of Guests
+              </label>
+              <input
+                type="number"
+                min="1"
+                value={formData.Guest || "1"}
+                onChange={(e) => setFormData({ ...formData, Guest: e.target.value || "1" })}
+                className="w-full px-4 py-2 border-2 border-[#F7E6CA]/70 focus:border-[#E9D5C3] rounded-xl text-sm font-sans text-black placeholder:text-[#2F3724]/40 transition-all duration-300 focus:ring-4 focus:ring-[#E9D5C3]/20 bg-white"
+                placeholder="1"
+              />
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-[#2F3724] mb-2 font-sans">
+                Message
+              </label>
+              <textarea
+                value={formData.Message}
+                onChange={(e) => setFormData({ ...formData, Message: e.target.value })}
+                className="w-full px-4 py-2 border-2 border-[#F7E6CA]/70 focus:border-[#E9D5C3] rounded-xl text-sm font-sans text-black placeholder:text-[#2F3724]/40 transition-all duration-300 focus:ring-4 focus:ring-[#E9D5C3]/20 bg-white"
+                rows={3}
+                placeholder="Any special message or notes..."
+              />
+            </div>
+          </div>
+          <div className="flex gap-3 mt-6">
+            <Button
+              onClick={onSave}
+              disabled={isLoading}
+              className="flex-1 bg-[#E0B4B1] hover:bg-[#A5B4A3] text-black transition-colors border border-[#2F3724]/40"
+            >
+              {isLoading ? (
+                <>
+                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                "Save Changes"
+              )}
+            </Button>
+            <Button onClick={onClose} variant="outline" className="px-6">
+              Cancel
+            </Button>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

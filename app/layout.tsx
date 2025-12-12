@@ -1,5 +1,5 @@
 import type React from "react"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { Great_Vibes, Inter, Imperial_Script, Cinzel } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
@@ -84,13 +84,6 @@ export const metadata: Metadata = {
     address: false,
     telephone: true,
   },
-  colorScheme: "light",
-  themeColor: "#D2A4A4",
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    viewportFit: "cover",
-  },
   alternates: {
     canonical: canonicalUrl,
   },
@@ -151,6 +144,14 @@ export const metadata: Metadata = {
     statusBarStyle: "default",
     capable: true,
   },
+}
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  colorScheme: "light",
+  themeColor: "#D2A4A4",
 }
 
 export default function RootLayout({
