@@ -5,10 +5,10 @@ import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import { siteConfig } from "@/content/site"
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://al-and-jhe-invitation.netlify.app/"
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://catherine-and-mark-invitation.netlify.app/"
 const canonicalUrl = siteUrl.replace(/\/$/, "")
-const desktopHero = "/Details/LinkPreviewNew.jpg"
-const mobileHero = "/Details/LinkPreviewNew.jpg"
+const desktopHero = "/Details/LinkPreviewNew2.jpg"
+const mobileHero = "/Details/LinkPreviewNew2.jpg"
 const eventImageUrl = `${canonicalUrl}${desktopHero}`
 
 const coupleNames = `${siteConfig.couple.groomNickname} & ${siteConfig.couple.brideNickname}`
