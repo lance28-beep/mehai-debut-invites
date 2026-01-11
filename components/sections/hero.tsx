@@ -11,7 +11,7 @@ const desktopImages = [
 ]
 
 const mobileImages = [
-  "/mobile-background/debut (1).webp",
+  "/decoration/debut (9).jpg",
 
 ]
 
