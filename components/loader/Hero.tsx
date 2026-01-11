@@ -79,7 +79,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpen, visible }) => {
             {/* Monogram Image */}
             <div className="relative w-28 h-28 sm:w-36 sm:h-36 md:w-44 md:h-44">
               <Image
-                src="/monogram/debut monogram.png"
+                src="/monogram/logo.png"
                 alt="Debut Monogram"
                 fill
                 className="object-contain"

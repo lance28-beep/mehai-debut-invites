@@ -97,7 +97,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
         <div className="relative flex items-center justify-center mb-8 sm:mb-12">
           <div className="relative w-28 sm:w-40 h-28 sm:h-40">
             <Image
-              src="/monogram/debut monogram.png"
+              src="/monogram/logo.png"
               alt="Debut Monogram"
               fill
               className="object-contain"

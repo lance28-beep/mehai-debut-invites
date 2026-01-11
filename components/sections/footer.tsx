@@ -458,7 +458,7 @@ export function Footer() {
 
                   <Image
 
-                    src="/monogram/debut monogram.png"
+                    src="/monogram/logo.png"
 
                     alt="Kaith Debut Monogram"
 
