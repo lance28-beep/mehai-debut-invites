@@ -286,7 +286,7 @@ export function Entourage() {
 
       >
 
-        <p className={`${inter.className} text-[13px] sm:text-sm md:text-base font-medium text-[#2E041A] ${textAlign}`}>
+        <p className={`${playfair.className} text-[13px] sm:text-sm md:text-base font-medium text-[#2E041A] ${textAlign}`}>
 
           {member.Name}
 

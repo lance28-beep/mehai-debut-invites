@@ -241,7 +241,7 @@ export function Details() {
                 </div>
               </div>
               <ul className="space-y-2.5 text-xs sm:text-sm text-white/75 leading-relaxed">
-                <li>Complimentary parking is available at the hotel—just mention Kaith's debut at the gate.</li>
+                <li>complimentary parking is available at the event's place</li>
               </ul>
             </div>
           </div>

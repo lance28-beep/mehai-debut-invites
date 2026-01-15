@@ -82,9 +82,9 @@ export function PrincipalSponsors() {
 
     return (
 
-      <div className={`flex flex-col ${containerAlign} justify-center py-1.5 sm:py-2 md:py-2.5 w-full`}>
+      <div className={`flex flex-col ${containerAlign} justify-center py-0.5 sm:py-1 w-full`}>
 
-        <p className={`${inter.className} text-[13px] sm:text-sm md:text-base font-medium text-[#FCE1B6] leading-snug break-words ${textAlign}`}>
+        <p className={`${playfair.className} text-[13px] sm:text-sm md:text-base font-medium text-[#FCE1B6] leading-snug break-words ${textAlign}`}>
 
           {name}
 
@@ -160,7 +160,7 @@ export function PrincipalSponsors() {
 
       id="sponsors"
 
-      className="relative bg-[#490505] py-16 sm:py-20 md:py-24 lg:py-28 overflow-hidden"
+      className="relative bg-[#490505] py-10 sm:py-12 md:py-14 lg:py-16 overflow-hidden"
 
     >
 
@@ -254,7 +254,7 @@ export function PrincipalSponsors() {
 
 
 
-      <div className="relative z-10 text-center mb-10 sm:mb-12 md:mb-16 px-4">
+      <div className="relative z-10 text-center mb-6 sm:mb-8 md:mb-10 px-4">
 
         <div className="inline-flex items-center gap-2 rounded-full border border-[#FCE1B6]/20 bg-[#FCE1B6]/10 px-5 py-2 text-[10px] sm:text-xs tracking-[0.48em] uppercase text-[#FCE1B6]/85">
 
@@ -264,7 +264,7 @@ export function PrincipalSponsors() {
 
         <h2
 
-          className={`${greatVibes.className} text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-[#FCE1B6] drop-shadow-[0_18px_48px_rgba(73,5,5,0.65)] mt-4`}
+          className={`${greatVibes.className} text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-[#FCE1B6] drop-shadow-[0_18px_48px_rgba(73,5,5,0.65)] mt-2`}
 
         >
 
@@ -272,7 +272,7 @@ export function PrincipalSponsors() {
 
         </h2>
 
-        <p className={`${inter.className} text-xs sm:text-sm md:text-base text-[#FCE1B6]/85 max-w-2xl mx-auto mt-4 leading-relaxed`}>
+        <p className={`${inter.className} text-xs sm:text-sm md:text-base text-[#FCE1B6]/85 max-w-2xl mx-auto mt-2 leading-relaxed`}>
 
           Honoring the distinguished mentors and godparents who have guided Kaith's journey. Their wisdom, love, and blessings illuminate her path as she steps into womanhood on this momentous eighteenth year.
 
@@ -290,7 +290,7 @@ export function PrincipalSponsors() {
 
 
 
-          <div className="relative p-5 sm:p-7 md:p-9 lg:p-12">
+          <div className="relative p-4 sm:p-5 md:p-6 lg:p-7">
 
             {isLoading ? (
 
@@ -348,59 +348,27 @@ export function PrincipalSponsors() {
 
             ) : (
 
-              <div className="mb-6 sm:mb-8 md:mb-10 lg:mb-12">
+              <div className="mb-0">
 
-                <div className="grid grid-cols-1 min-[350px]:grid-cols-2 gap-x-2 sm:gap-x-4 md:gap-x-6 mb-3 sm:mb-4">
-
-                  <SectionTitle align="right" className="pr-3 sm:pr-4 md:pr-6">
-
-                    Gentlemen of Honor
-
-                  </SectionTitle>
-
-                  <SectionTitle align="left" className="pl-3 sm:pl-4 md:pl-6">
-
-                    Ladies of Grace
-
-                  </SectionTitle>
-
-                </div>
-
-                <div className="grid grid-cols-1 min-[350px]:grid-cols-2 gap-x-2 sm:gap-x-4 md:gap-x-6 gap-y-2 sm:gap-y-3 md:gap-y-4 items-stretch">
+                <div className="flex flex-col gap-3 sm:gap-4 md:gap-5">
 
                   {sponsorPairs.map((pair, idx) => (
 
-                    <React.Fragment key={`pair-${idx}`}>
+                    <div key={`pair-${idx}`} className="flex flex-col items-center gap-1 sm:gap-1.5 w-full">
 
-                      <div className="px-3 sm:px-4 md:px-6">
+                      {pair.MalePrincipalSponsor && (
 
-                        {pair.MalePrincipalSponsor ? (
+                        <NameItem name={pair.MalePrincipalSponsor} align="center" />
 
-                          <NameItem name={pair.MalePrincipalSponsor} align="right" />
+                      )}
 
-                        ) : (
+                      {pair.FemalePrincipalSponsor && (
 
-                          <div className="py-2" />
+                        <NameItem name={pair.FemalePrincipalSponsor} align="center" />
 
-                        )}
+                      )}
 
-                      </div>
-
-                      <div className="px-3 sm:px-4 md:px-6">
-
-                        {pair.FemalePrincipalSponsor ? (
-
-                          <NameItem name={pair.FemalePrincipalSponsor} align="left" />
-
-                        ) : (
-
-                          <div className="py-2" />
-
-                        )}
-
-                      </div>
-
-                    </React.Fragment>
+                    </div>
 
                   ))}
 
