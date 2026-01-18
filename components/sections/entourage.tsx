@@ -436,12 +436,6 @@ export function Entourage() {
 
       <div className="relative z-10 text-center mb-6 sm:mb-8 md:mb-10 px-4">
 
-          <div className="inline-flex items-center gap-2 rounded-full border border-[#FCE1B6]/20 bg-[#2E041A]/40 px-5 py-2 text-[10px] sm:text-xs tracking-[0.48em] uppercase text-[#FCE1B6]">
-
-          The Entourage
-
-        </div>
-
         <h2
 
           className={`${greatVibes.className} text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-[#FCE1B6] drop-shadow-[0_18px_48px_rgba(46,4,26,0.68)] mt-4`}

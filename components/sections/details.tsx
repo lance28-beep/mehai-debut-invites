@@ -29,9 +29,8 @@ export function Details() {
     }
   }
 
-  const { ceremony, reception } = siteConfig
+  const { ceremony } = siteConfig
   const venue = ceremony.location
-  const entourageCall = ceremony.entourageTime
   const guestsCall = ceremony.guestsTime
   const mapsLink = `https://maps.google.com/?q=${encodeURIComponent(venue)}`
 
@@ -40,9 +39,7 @@ export function Details() {
   }
 
   const schedule = [
-    { label: "Ceremony Begins", value: ceremony.time },
-    { label: "Reception Follows", value: reception.time },
-    entourageCall && { label: "Entourage Call Time", value: entourageCall },
+    { label: "Program begins", value: ceremony.time },
     guestsCall && { label: "Guest Doors Open", value: guestsCall },
   ].filter(Boolean) as { label: string; value: string }[]
 
@@ -196,10 +193,6 @@ export function Details() {
                 </div>
               </div>
               <ul className="space-y-2.5 text-xs sm:text-sm text-white/75 leading-relaxed">
-                <li className="flex items-start gap-2">
-                  <Sparkles className="mt-1 h-3.5 w-3.5 text-[#FCE1B6]" />
-                  Please arrive before the entourage call time to sign the debut guest book and take portraits.
-                </li>
                 <li className="flex items-start gap-2">
                   <Sparkles className="mt-1 h-3.5 w-3.5 text-[#FCE1B6]" />
                   Program wraps by 9:00 PM so you can rest and travel home safely.

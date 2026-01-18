@@ -256,19 +256,13 @@ export function PrincipalSponsors() {
 
       <div className="relative z-10 text-center mb-6 sm:mb-8 md:mb-10 px-4">
 
-        <div className="inline-flex items-center gap-2 rounded-full border border-[#FCE1B6]/20 bg-[#FCE1B6]/10 px-5 py-2 text-[10px] sm:text-xs tracking-[0.48em] uppercase text-[#FCE1B6]/85">
-
-          Principal Sponsors
-
-        </div>
-
         <h2
 
-          className={`${greatVibes.className} text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-[#FCE1B6] drop-shadow-[0_18px_48px_rgba(73,5,5,0.65)] mt-2`}
+          className={`${greatVibes.className} text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-[#FCE1B6] drop-shadow-[0_18px_48px_rgba(73,5,5,0.65)]`}
 
         >
 
-          Guardians of Grace
+          Sponsors
 
         </h2>
 
