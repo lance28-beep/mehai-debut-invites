@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { siteConfig } from '@/content/site';
 
 interface LoadingScreenProps {
   onComplete: () => void;
@@ -39,25 +40,25 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
         fadeOut ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
     >
-      {/* Background */}
-      <div 
+      {/* Background overlay gradient */}
+      <div
         className="absolute inset-0"
         style={{
-          backgroundColor: '#490505'
+          background: 'linear-gradient(180deg, #372847 0%, #6A239E 50%, #DC96FD 100%)',
         }}
       />
 
       {/* Ornate pattern background */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-30">
         {/* Base pattern - diagonal lines forming diamonds */}
-        <div 
+        <div
           className="absolute inset-0"
           style={{
             backgroundImage: `
-              repeating-linear-gradient(45deg, transparent, transparent 70px, rgba(255,225,190,0.1) 70px, rgba(255,225,190,0.1) 71px),
-              repeating-linear-gradient(-45deg, transparent, transparent 70px, rgba(255,225,190,0.1) 70px, rgba(255,225,190,0.1) 71px),
-              repeating-linear-gradient(135deg, transparent, transparent 35px, rgba(255,225,190,0.08) 35px, rgba(255,225,190,0.08) 36px),
-              repeating-linear-gradient(225deg, transparent, transparent 35px, rgba(255,225,190,0.08) 35px, rgba(255,225,190,0.08) 36px)
+              repeating-linear-gradient(45deg, transparent, transparent 70px, rgba(255,255,255,0.1) 70px, rgba(255,255,255,0.1) 71px),
+              repeating-linear-gradient(-45deg, transparent, transparent 70px, rgba(255,255,255,0.1) 70px, rgba(255,255,255,0.1) 71px),
+              repeating-linear-gradient(135deg, transparent, transparent 35px, rgba(255,255,255,0.08) 35px, rgba(255,255,255,0.08) 36px),
+              repeating-linear-gradient(225deg, transparent, transparent 35px, rgba(255,255,255,0.08) 35px, rgba(255,255,255,0.08) 36px)
             `,
             backgroundSize: '70px 70px, 70px 70px, 35px 35px, 35px 35px',
           }}
@@ -68,7 +69,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
           <defs>
             <pattern id="scrollPattern" x="0" y="0" width="140" height="140" patternUnits="userSpaceOnUse">
               {/* Scroll motifs at intersections */}
-              <g fill="none" stroke="#FFE1BE" strokeWidth="0.5">
+              <g fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="0.5">
                 {/* Top scroll */}
                 <path d="M 70 0 Q 65 15 70 30 Q 75 15 70 0" />
                 {/* Bottom scroll */}
@@ -89,7 +90,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
         </svg>
 
         {/* Subtle overlay for depth */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#2E041A]/80 via-transparent to-[#2E041A]/80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#372847]/60 via-transparent to-[#372847]/60" />
       </div>
 
       <div className="relative flex flex-col items-center justify-center px-4 sm:px-8">
@@ -102,7 +103,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
               fill
               className="object-contain"
               priority
-              style={{ filter: 'brightness(0) saturate(100%) invert(84%) sepia(28%) saturate(557%) hue-rotate(342deg) brightness(100%) contrast(88%)' }}
+              style={{ filter: 'brightness(0) invert(1)' }}
             />
           </div>
         </div>
@@ -112,7 +113,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
           {/* Message */}
           <p
             className="text-xs sm:text-sm leading-relaxed sm:leading-loose tracking-wide mb-4 sm:mb-6 italic"
-            style={{ fontFamily: '"Cinzel", serif', fontWeight: 300, color: '#FFE1BE' }}
+            style={{ fontFamily: '"Cinzel", serif', fontWeight: 300, color: '#ffffff' }}
           >
             A beautiful chapter unfolds as laughter, dreams, and memories come together.
           </p>
@@ -120,31 +121,31 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
           {/* Main title */}
           <p
             className="text-base sm:text-xl tracking-[0.12em] sm:tracking-[0.15em] mb-4 sm:mb-6"
-            style={{ fontFamily: '"Cinzel", serif', fontWeight: 400, color: '#FFE1BE' }}
+            style={{ fontFamily: '"Cinzel", serif', fontWeight: 400, color: '#ffffff' }}
           >
-            Kaith is turning eighteen!
+            {siteConfig.debutante.nickname} is turning eighteen!
           </p>
 
           {/* Subtitle */}
           <p
             className="text-xs sm:text-sm leading-relaxed sm:leading-loose tracking-wide mb-4 sm:mb-6"
-            style={{ fontFamily: '"Cinzel", serif', fontWeight: 300, color: '#FFE1BE' }}
+            style={{ fontFamily: '"Cinzel", serif', fontWeight: 300, color: '#ffffff' }}
           >
             Join us as we celebrate her debut and the beginning of a bright new journey.
           </p>
 
           {/* Progress bar */}
-          <div className="relative w-48 sm:w-64 h-0.5 mx-auto rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(255, 225, 190, 0.2)' }}>
-            <div 
+          <div className="relative w-48 sm:w-64 h-0.5 mx-auto rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }}>
+            <div
               className="absolute inset-y-0 left-0 transition-all duration-300 ease-out rounded-full"
-              style={{ width: `${progress}%`, backgroundColor: '#FFE1BE' }}
+              style={{ width: `${progress}%`, backgroundColor: '#ffffff' }}
             />
           </div>
           
           {/* Progress percentage */}
           <p
             className="text-[9px] sm:text-[10px] tracking-[0.2em] mt-2 sm:mt-3"
-            style={{ fontFamily: '"Cinzel", serif', fontWeight: 300, color: 'rgba(255, 225, 190, 0.7)' }}
+            style={{ fontFamily: '"Cinzel", serif', fontWeight: 300, color: 'rgba(255, 255, 255, 0.8)' }}
           >
             {progress}%
           </p>

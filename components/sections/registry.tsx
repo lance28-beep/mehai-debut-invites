@@ -1,7 +1,7 @@
 "use client"
 
 import { Section } from "@/components/section"
-
+import { siteConfig } from "@/content/site"
 import { Great_Vibes, Playfair_Display, Inter } from "next/font/google"
 
 
@@ -26,11 +26,9 @@ export function Registry() {
 
     >
 
-
-
       <div className="relative z-10 text-center mb-10 sm:mb-14 lg:mb-16 px-4">
 
-        <div className="inline-flex items-center gap-2 rounded-full border border-[#FCE1B6]/20 bg-[#490505]/40 px-5 py-2 text-[10px] sm:text-xs uppercase tracking-[0.48em] text-[#FCE1B6]">
+        <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-[#372847]/40 px-5 py-2 text-[10px] sm:text-xs uppercase tracking-[0.48em] text-white">
 
           Gift Registry
 
@@ -38,7 +36,7 @@ export function Registry() {
 
         <h2
 
-          className={`${greatVibes.className} text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-[#FCE1B6] drop-shadow-[0_18px_40px_rgba(73,5,5,0.68)] mt-4`}
+          className={`${greatVibes.className} text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white drop-shadow-[0_18px_40px_rgba(55,40,71,0.68)] mt-4`}
 
         >
 
@@ -48,11 +46,11 @@ export function Registry() {
 
         <p
 
-          className={`${inter.className} text-xs sm:text-sm md:text-base text-[#FCE1B6]/85 max-w-2xl mx-auto mt-4 leading-relaxed`}
+          className={`${inter.className} text-xs sm:text-sm md:text-base text-white/85 max-w-2xl mx-auto mt-4 leading-relaxed`}
 
         >
 
-          Your presence is the most precious gift for Kaith's debut celebration. If you wish to share a token of love,
+          Your presence is the most precious gift for {siteConfig.debutante.nickname}'s debut celebration. If you wish to share a token of love,
 
           we welcome your thoughtful contributions to help her pursue her dreams.
 
@@ -64,15 +62,15 @@ export function Registry() {
 
       <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6">
 
-        <div className="relative overflow-hidden rounded-[32px] border-2 border-[#FCE1B6]/20 bg-[#FCE1B6] shadow-[0_26px_70px_rgba(73,5,5,0.4)]">
+        <div className="relative overflow-hidden rounded-[32px] border-2 border-white/20 bg-white shadow-[0_26px_70px_rgba(55,40,71,0.4)]">
 
           <div className="relative px-6 py-8 sm:px-10 sm:py-10 md:px-12 md:py-12">
 
             <div className="max-w-2xl mx-auto text-center">
 
-              <p className={`${playfair.className} text-lg sm:text-xl md:text-2xl text-[#490505] leading-relaxed`}>
+              <p className={`${playfair.className} text-lg sm:text-xl md:text-2xl text-[#372847] leading-relaxed`}>
 
-                "As Kaith celebrates her debut, your presence is the greatest gift she treasures."
+                {`As ${siteConfig.debutante.nickname} celebrates her debut, your presence is the greatest gift she treasures.`}
 
               </p>
 

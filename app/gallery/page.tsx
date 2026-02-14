@@ -1,6 +1,7 @@
 import fs from "fs/promises"
 import path from "path"
 import MasonryGallery from "@/components/masonry-gallery"
+import { siteConfig } from "@/content/site"
 import { Great_Vibes, Inter } from "next/font/google"
 
 const greatVibes = Great_Vibes({
@@ -45,18 +46,18 @@ export default async function GalleryPage() {
   ]
 
   return (
-    <main className="min-h-screen bg-[#490505] relative overflow-hidden">
+    <main className="min-h-screen bg-[#372847] relative overflow-hidden">
       {/* Ornate pattern background */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-30">
         {/* Base pattern - diagonal lines forming diamonds */}
-        <div 
+        <div
           className="absolute inset-0"
           style={{
             backgroundImage: `
-              repeating-linear-gradient(45deg, transparent, transparent 70px, rgba(252,225,182,0.1) 70px, rgba(252,225,182,0.1) 71px),
-              repeating-linear-gradient(-45deg, transparent, transparent 70px, rgba(252,225,182,0.1) 70px, rgba(252,225,182,0.1) 71px),
-              repeating-linear-gradient(135deg, transparent, transparent 35px, rgba(252,225,182,0.08) 35px, rgba(252,225,182,0.08) 36px),
-              repeating-linear-gradient(225deg, transparent, transparent 35px, rgba(252,225,182,0.08) 35px, rgba(252,225,182,0.08) 36px)
+              repeating-linear-gradient(45deg, transparent, transparent 70px, rgba(255,255,255,0.1) 70px, rgba(255,255,255,0.1) 71px),
+              repeating-linear-gradient(-45deg, transparent, transparent 70px, rgba(255,255,255,0.1) 70px, rgba(255,255,255,0.1) 71px),
+              repeating-linear-gradient(135deg, transparent, transparent 35px, rgba(255,255,255,0.08) 35px, rgba(255,255,255,0.08) 36px),
+              repeating-linear-gradient(225deg, transparent, transparent 35px, rgba(255,255,255,0.08) 35px, rgba(255,255,255,0.08) 36px)
             `,
             backgroundSize: '70px 70px, 70px 70px, 35px 35px, 35px 35px',
           }}
@@ -67,7 +68,7 @@ export default async function GalleryPage() {
           <defs>
             <pattern id="scrollPatternGallery" x="0" y="0" width="140" height="140" patternUnits="userSpaceOnUse">
               {/* Scroll motifs at intersections */}
-              <g fill="none" stroke="#FCE1B6" strokeWidth="0.5">
+              <g fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="0.5">
                 {/* Top scroll */}
                 <path d="M 70 0 Q 65 15 70 30 Q 75 15 70 0" />
                 {/* Bottom scroll */}
@@ -88,35 +89,35 @@ export default async function GalleryPage() {
         </svg>
 
         {/* Subtle overlay for depth */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#490505]/80 via-transparent to-[#490505]/80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#372847]/80 via-transparent to-[#372847]/80" />
       </div>
 
       <section className="relative z-10 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-8 sm:py-16">
         <div className="text-center mb-6 sm:mb-8 md:mb-10 px-3 sm:px-4">
           <div className="mx-auto max-w-3xl">
-            <p className={`${inter.className} text-xs sm:text-sm tracking-[0.45em] uppercase text-[#FCE1B6]/75 mb-3`}>
-              Crimson keepsakes
+            <p className={`${inter.className} text-xs sm:text-sm tracking-[0.45em] uppercase text-white/75 mb-3`}>
+              Lavender keepsakes
             </p>
             <h1
-              className={`${greatVibes.className} text-4xl sm:text-5xl md:text-6xl text-[#FCE1B6] mb-4`}
+              className={`${greatVibes.className} text-4xl sm:text-5xl md:text-6xl text-white mb-4`}
             >
-              Gallery of Gilded Evenings
+              Gallery of Lavender Evenings
             </h1>
-            <p className={`${inter.className} text-sm sm:text-base md:text-lg text-[#FCE1B6]/85 mt-4 leading-relaxed`}>
-              Moments draped in wine red, gold, and black—Kaith's debut glow, framed for you to relive.
+            <p className={`${inter.className} text-sm sm:text-base md:text-lg text-white/85 mt-4 leading-relaxed`}>
+              Moments draped in lavender, violet, and silver—{siteConfig.debutante.nickname}'s debut glow, framed for you to relive.
             </p>
           </div>
         </div>
 
         {images.length === 0 ? (
-          <div className={`${inter.className} text-center text-[#FCE1B6]/90`}>
+          <div className={`${inter.className} text-center text-white/90`}>
             <p className="font-light">
               No images found. Add files to{" "}
-              <code className="px-2 py-1 bg-[#2E041A]/80 rounded border border-[#FCE1B6]/30 text-[#FCE1B6]">
+              <code className="px-2 py-1 bg-[#372847]/80 rounded border border-white/30 text-white">
                 public/mobile-background
               </code>
               {" "}or{" "}
-              <code className="px-2 py-1 bg-[#2E041A]/80 rounded border border-[#FCE1B6]/30 text-[#FCE1B6]">
+              <code className="px-2 py-1 bg-[#372847]/80 rounded border border-white/30 text-white">
                 public/desktop-background
               </code>
               .

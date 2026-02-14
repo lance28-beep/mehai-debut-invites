@@ -5,7 +5,7 @@ import React from "react"
 import { useEffect, useMemo, useState } from "react"
 
 import { Section } from "@/components/section"
-
+import { siteConfig } from "@/content/site"
 import { Great_Vibes, Playfair_Display, Inter } from "next/font/google"
 
 
@@ -56,7 +56,7 @@ export function PrincipalSponsors() {
 
       <h3
 
-        className={`${playfair.className} text-xs sm:text-sm md:text-base tracking-[0.45em] uppercase text-[#FCE1B6] mb-2 sm:mb-3 md:mb-4 ${textAlign} ${className}`}
+        className={`${playfair.className} text-xs sm:text-sm md:text-base tracking-[0.45em] uppercase text-white mb-2 sm:mb-3 md:mb-4 ${textAlign} ${className}`}
 
       >
 
@@ -84,7 +84,7 @@ export function PrincipalSponsors() {
 
       <div className={`flex flex-col ${containerAlign} justify-center py-0.5 sm:py-1 w-full`}>
 
-        <p className={`${playfair.className} text-[13px] sm:text-sm md:text-base font-medium text-[#FCE1B6] leading-snug break-words ${textAlign}`}>
+        <p className={`${playfair.className} text-[13px] sm:text-sm md:text-base font-medium text-white leading-snug break-words ${textAlign}`}>
 
           {name}
 
@@ -160,7 +160,7 @@ export function PrincipalSponsors() {
 
       id="sponsors"
 
-      className="relative bg-[#490505] py-10 sm:py-12 md:py-14 lg:py-16 overflow-hidden"
+      className="relative bg-[#372847] py-10 sm:py-12 md:py-14 lg:py-16 overflow-hidden"
 
     >
 
@@ -178,13 +178,13 @@ export function PrincipalSponsors() {
 
             backgroundImage: `
 
-              repeating-linear-gradient(45deg, transparent, transparent 70px, rgba(252,225,182,0.1) 70px, rgba(252,225,182,0.1) 71px),
+              repeating-linear-gradient(45deg, transparent, transparent 70px, rgba(255,255,255,0.1) 70px, rgba(255,255,255,0.1) 71px),
 
-              repeating-linear-gradient(-45deg, transparent, transparent 70px, rgba(252,225,182,0.1) 70px, rgba(252,225,182,0.1) 71px),
+              repeating-linear-gradient(-45deg, transparent, transparent 70px, rgba(255,255,255,0.1) 70px, rgba(255,255,255,0.1) 71px),
 
-              repeating-linear-gradient(135deg, transparent, transparent 35px, rgba(252,225,182,0.08) 35px, rgba(252,225,182,0.08) 36px),
+              repeating-linear-gradient(135deg, transparent, transparent 35px, rgba(255,255,255,0.08) 35px, rgba(255,255,255,0.08) 36px),
 
-              repeating-linear-gradient(225deg, transparent, transparent 35px, rgba(252,225,182,0.08) 35px, rgba(252,225,182,0.08) 36px)
+              repeating-linear-gradient(225deg, transparent, transparent 35px, rgba(255,255,255,0.08) 35px, rgba(255,255,255,0.08) 36px)
 
             `,
 
@@ -206,7 +206,7 @@ export function PrincipalSponsors() {
 
               {/* Scroll motifs at intersections */}
 
-              <g fill="none" stroke="#FCE1B6" strokeWidth="0.5">
+              <g fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="0.5">
 
                 {/* Top scroll */}
 
@@ -248,7 +248,7 @@ export function PrincipalSponsors() {
 
         {/* Subtle overlay for depth */}
 
-        <div className="absolute inset-0 bg-gradient-to-b from-[#490505]/80 via-transparent to-[#490505]/80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#372847]/80 via-transparent to-[#372847]/80" />
 
       </div>
 
@@ -258,7 +258,7 @@ export function PrincipalSponsors() {
 
         <h2
 
-          className={`${greatVibes.className} text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-[#FCE1B6] drop-shadow-[0_18px_48px_rgba(73,5,5,0.65)]`}
+          className={`${greatVibes.className} text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white drop-shadow-[0_18px_48px_rgba(55,40,71,0.65)]`}
 
         >
 
@@ -266,9 +266,9 @@ export function PrincipalSponsors() {
 
         </h2>
 
-        <p className={`${inter.className} text-xs sm:text-sm md:text-base text-[#FCE1B6]/85 max-w-2xl mx-auto mt-2 leading-relaxed`}>
+        <p className={`${inter.className} text-xs sm:text-sm md:text-base text-white/85 max-w-2xl mx-auto mt-2 leading-relaxed`}>
 
-          Honoring the distinguished mentors and godparents who have guided Kaith's journey. Their wisdom, love, and blessings illuminate her path as she steps into womanhood on this momentous eighteenth year.
+          Honoring the distinguished mentors and godparents who have guided {siteConfig.debutante.nickname}'s journey. Their wisdom, love, and blessings illuminate her path as she steps into womanhood on this momentous eighteenth year.
 
         </p>
 
@@ -278,9 +278,9 @@ export function PrincipalSponsors() {
 
       <div className="relative z-10 max-w-5xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
 
-        <div className="relative bg-[#490505]/80 backdrop-blur-2xl border border-[#FCE1B6]/20 rounded-xl sm:rounded-2xl shadow-[0_25px_80px_rgba(73,5,5,0.45)] overflow-hidden">
+        <div className="relative bg-[#372847]/80 backdrop-blur-2xl border border-white/20 rounded-xl sm:rounded-2xl shadow-[0_25px_80px_rgba(55,40,71,0.45)] overflow-hidden">
 
-          <div className="absolute inset-[10px] sm:inset-[14px] md:inset-[18px] border border-[#FCE1B6]/15 rounded-lg sm:rounded-xl pointer-events-none" />
+          <div className="absolute inset-[10px] sm:inset-[14px] md:inset-[18px] border border-white/15 rounded-lg sm:rounded-xl pointer-events-none" />
 
 
 
@@ -292,9 +292,9 @@ export function PrincipalSponsors() {
 
                 <div className="flex flex-col items-center gap-4">
 
-                  <div className="w-12 h-12 border-4 border-[#FCE1B6]/20 border-t-[#FCE1B6]/70 rounded-full animate-spin" />
+                  <div className="w-12 h-12 border-4 border-white/20 border-t-white/70 rounded-full animate-spin" />
 
-                  <span className={`${inter.className} text-[#FCE1B6]/80 text-lg`}>
+                  <span className={`${inter.className} text-white/80 text-lg`}>
 
                     Gathering her sponsors…
 
@@ -316,7 +316,7 @@ export function PrincipalSponsors() {
 
                     onClick={fetchSponsors}
 
-                    className={`${playfair.className} text-[#FCE1B6] hover:text-[#FCE1B6]/70 transition-colors underline`}
+                    className={`${playfair.className} text-white hover:text-white/70 transition-colors underline`}
 
                   >
 
@@ -332,7 +332,7 @@ export function PrincipalSponsors() {
 
               <div className="text-center py-24">
 
-                <p className={`${inter.className} text-[#FCE1B6]/70 text-lg`}>
+                <p className={`${inter.className} text-white/70 text-lg`}>
 
                   Her sponsors will be announced soon.
 

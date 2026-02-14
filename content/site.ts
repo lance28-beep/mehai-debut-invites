@@ -1,4 +1,8 @@
 export const siteConfig = {
+  debutante: {
+    name: "Mehai Jeffverly",
+    nickname: "Mehai",
+  },
   couple: {
     bride: "FLORENCE MAE P CLAVERIA",
     brideNickname: "Florence Mae",
@@ -6,31 +10,31 @@ export const siteConfig = {
     groomNickname: "Daniel",
   },
   wedding: {
-    date: "FEBRUARY 14, 2026",
-    time: "4:00PM",
-    venue: "De Guzman's Events Place, Ayos Lomboy, Guimba, Nueva Ecija",
+    date: "APRIL 19, 2026",
+    time: "5:30 PM",
+    venue: "Villa Anaya, Daan Kalikasan Road, Brgy. Parian, Mangatarem, Pangasinan, Philippines",
     tagline: "are getting married!",
     theme: "Purple & Sage Motif",
     motif: "#6A4F82, #B9AACB, #A8AF8D, #F4F4F4, #5B6B3C",
   },
   details: {
     rsvp: {
-      deadline: "January 25, 2026",
+      deadline: "April 12, 2026",
     },
   },
   ceremony: {
-    location: "De Guzman's Events Place, Ayos Lomboy, Guimba, Nueva Ecija",
-    venue: "De Guzman's Events Place, Ayos Lomboy, Guimba, Nueva Ecija",
-    date: "February 14 2026",
-    day: "Saturday",
-    time: "4:00PM",
-    entourageTime: "3:30 PM",
-    guestsTime: "3:30 PM",
+    location: "Villa Anaya, Daan Kalikasan Road, Brgy. Parian, Mangatarem, Pangasinan, Philippines",
+    venue: "Villa Anaya, Daan Kalikasan Road, Brgy. Parian, Mangatarem, Pangasinan, Philippines",
+    date: "April 19 2026",
+    day: "Sunday",
+    time: "5:30 PM",
+    entourageTime: "5:00 PM",
+    guestsTime: "5:00 PM",
   },
   reception: {
-    location: "De Guzman's Events Place, Ayos Lomboy, Guimba, Nueva Ecija",
-    venue: "De Guzman's Events Place, Ayos Lomboy, Guimba, Nueva Ecija",
-    date: "FEBRUARY 14, 2026",
+    location: "Villa Anaya, Daan Kalikasan Road, Brgy. Parian, Mangatarem, Pangasinan, Philippines",
+    venue: "Villa Anaya, Daan Kalikasan Road, Brgy. Parian, Mangatarem, Pangasinan, Philippines",
+    date: "APRIL 19, 2026",
     time: "Reception to follow",
   },
   dressCode: {
@@ -64,8 +68,8 @@ Now, as they prepare to say yes before God and the people they love most, Cather
   },
   snapShare: {
     googleDriveLink: "https://drive.google.com/drive/folders/1mcPDa_sGpHnDBWR5mUDek-RFyawjWQqI?usp=sharing",
-    hashtag: "#DanielAndFlorenceMae2026",
-    instructions: "Please scan this QR Code, create a folder with your name and upload the photos and videos you have taken during our wedding reception. We are delighted to see your snaps too!",
+    hashtag: "#MehaiDebut2026",
+    instructions: "Please scan this QR Code, create a folder with your name and upload the photos and videos you have taken during the debut celebration. We are delighted to see your snaps too!",
   },
 }
 

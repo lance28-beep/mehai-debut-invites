@@ -7,20 +7,20 @@ import { siteConfig } from "@/content/site"
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://kath-debut-celebration-invitation.vercel.app/"
 const canonicalUrl = siteUrl.replace(/\/$/, "")
-const desktopHero = "/Details/imageLinkPreview.jpg"
-const mobileHero = "/Details/imageLinkPreview.jpg"
+const desktopHero = "/Details/linkPreview.jpg"
+const mobileHero = "/Details/linkPreview.jpg"
 const eventImageUrl = `${canonicalUrl}${desktopHero}`
 
-const debutanteName = "Kaith"
+const debutanteName = siteConfig.debutante.nickname
 const eventTitle = `${debutanteName} - Debut Invitation`
-const eventDescription = `Celebrate Kaith's debut on ${siteConfig.wedding.date} at ${siteConfig.ceremony.venue}. RSVP, explore the story, and find everything you need to join the celebration.`
+const eventDescription = `Celebrate ${debutanteName}'s debut on ${siteConfig.wedding.date} at ${siteConfig.ceremony.venue}. RSVP, explore the story, and find everything you need to join the celebration.`
 
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Event",
   name: `${debutanteName}'s Debut`,
-  startDate: "2026-02-14T16:00:00+08:00",
-  endDate: "2026-02-14T22:00:00+08:00",
+  startDate: "2026-04-19T17:30:00+08:00",
+  endDate: "2026-04-20T00:30:00+08:00",
   eventStatus: "https://schema.org/EventScheduled",
   eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
   location: [
@@ -49,12 +49,12 @@ const jsonLd = {
   ],
   image: [eventImageUrl],
   description:
-    `You're invited to celebrate Kaith's debut. Discover celebration details, RSVP, and explore the story.`,
+    `You're invited to celebrate ${debutanteName}'s debut. Discover celebration details, RSVP, and explore the story.`,
   organizer: {
     "@type": "Person",
-    name: debutanteName,
+    name: siteConfig.debutante.name,
   },
-  eventHashtag: `#KaithsDebut`,
+  eventHashtag: `#MehaiDebut2026`,
 }
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
@@ -70,7 +70,7 @@ export const metadata: Metadata = {
   },
   description: eventDescription,
   keywords:
-    `Kaith debut, ${siteConfig.ceremony.venue} debut, ${siteConfig.reception.venue} debut, debut invitation, RSVP, debut gallery, message wall, #KaithsDebut`,
+    `${debutanteName} debut, ${siteConfig.ceremony.venue} debut, ${siteConfig.reception.venue} debut, debut invitation, RSVP, debut gallery, message wall, #MehaiDebut2026`,
   applicationName: `${debutanteName} Debut Invitation`,
   authors: [
     { name: debutanteName },
@@ -102,7 +102,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: `${debutanteName} | ${siteConfig.wedding.date}`,
     description:
-      `Celebrate Kaith's debut on ${siteConfig.wedding.date}. Discover the story, RSVP, and find important details for the celebration.`,
+      `Celebrate ${debutanteName}'s debut on ${siteConfig.wedding.date}. Discover the story, RSVP, and find important details for the celebration.`,
     url: canonicalUrl,
     siteName: `${debutanteName}'s Debut`,
     locale: "en_PH",
@@ -122,10 +122,10 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `${debutanteName} Debut Invitation`,
     description:
-      `You're invited to Kaith's debut on ${siteConfig.wedding.date}. RSVP, explore the story, and get all the details for the big day! #KaithsDebut`,
+      `You're invited to ${debutanteName}'s debut on ${siteConfig.wedding.date}. RSVP, explore the story, and get all the details for the big day! #MehaiDebut2026`,
     images: [eventImageUrl],
-    creator: `@KaithsDebut`,
-    site: `@KaithsDebut`,
+    creator: `@MehaiDebut2026`,
+    site: `@MehaiDebut2026`,
   },
   robots: {
     index: true,

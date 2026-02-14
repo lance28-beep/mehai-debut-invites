@@ -61,11 +61,11 @@ export const Hero: React.FC<HeroProps> = ({ onOpen, visible }) => {
           />
         ))}
         
-        {/* Overlay */}
-        <div 
+        {/* Overlay - same theme as LoadingScreen */}
+        <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            background: 'linear-gradient(to bottom, rgba(73, 5, 5, 0.7), rgba(73, 5, 5, 0.7))'
+            background: 'linear-gradient(180deg, rgba(55, 40, 71, 0.75) 0%, rgba(106, 35, 158, 0.75) 50%, rgba(220, 150, 253, 0.75) 100%)',
           }}
         />
       </div>
@@ -84,7 +84,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpen, visible }) => {
                 fill
                 className="object-contain"
                 priority
-                style={{ filter: 'brightness(0) saturate(100%) invert(84%) sepia(28%) saturate(557%) hue-rotate(342deg) brightness(100%) contrast(88%)' }}
+                style={{ filter: 'brightness(0) invert(1)' }}
               />
             </div>
           </div>
@@ -98,7 +98,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpen, visible }) => {
             style={{
               fontFamily: '"Great Vibes", cursive',
               fontWeight: 400,
-              color: '#FFE1BE',
+              color: '#ffffff',
             }}
           >
             You are
@@ -109,31 +109,31 @@ export const Hero: React.FC<HeroProps> = ({ onOpen, visible }) => {
             style={{
               fontFamily: '"Cinzel", serif',
               fontWeight: 700,
-              color: '#FFE1BE',
+              color: '#ffffff',
             }}
           >
             Invited!
           </h1>
 
-          <button 
+          <button
             onClick={() => {
               onOpen();
             }}
             className="px-10 py-4 font-serif text-sm tracking-[0.2em] uppercase rounded-sm border transition-all duration-300"
             style={{
-              backgroundColor: '#490505',
-              borderColor: '#FFE1BE',
-              color: '#FFE1BE',
+              backgroundColor: '#372847',
+              borderColor: '#ffffff',
+              color: '#ffffff',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(73, 5, 5, 0.9)';
+              e.currentTarget.style.backgroundColor = '#6A239E';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#490505';
+              e.currentTarget.style.backgroundColor = '#372847';
             }}
           >
             <span
-              style={{ fontFamily: '"Cinzel", serif', fontWeight: 500, color: '#FFE1BE' }}
+              style={{ fontFamily: '"Cinzel", serif', fontWeight: 500, color: '#ffffff' }}
             >
               Open Invitation
             </span>
