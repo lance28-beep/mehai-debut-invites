@@ -220,18 +220,18 @@ export function Details() {
                 <Palette className="h-6 w-6 text-[#DC96FD]" />
                 <div>
                   <p className="text-xs sm:text-sm uppercase tracking-[0.38em] text-white/70">Attire & Palette</p>
-                  <h3 className="text-white text-base sm:text-lg font-semibold">Dress in Silver & Powder Pink</h3>
+                  <h3 className="text-white text-base sm:text-lg font-semibold">Dress in Light Yellow & Blush Pink</h3>
                 </div>
               </div>
               <ul className="space-y-2 text-xs sm:text-sm text-white/75 leading-relaxed">
                 <li>
-                  Ladies: Powder pink, silver, or gray tones.
+                  Ladies: Light yellow or blush pink tones.
                 </li>
-                <li>Gentlemen: Silver, gray, or neutral suits.</li>
+                <li>Gentlemen: Neutral suits or formal attire.</li>
               </ul>
               <div className="relative w-full rounded-2xl overflow-hidden border border-white/20 shadow-[0_8px_24px_rgba(10,16,34,0.4)]">
                 <Image
-                  src="/Details/attire.png"
+                  src="/Details/attirenew.png"
                   alt="Attire Color Palette Guide"
                   width={800}
                   height={400}

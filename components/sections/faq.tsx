@@ -38,7 +38,7 @@ const faqItems: FAQItem[] = [
 
     answer:
 
-      "Ladies: Pure black long gown.\n\nGentlemen: Tuxedo.\n\nKindly avoid bright, neon, or overly casual attire to keep the evening elegant and sophisticated.",
+      "Ladies: Light Yellow or Blush Pink long gown.\n\nGentlemen: Suit or Tuxedo.\n\nKindly avoid bright, neon, or overly casual attire to keep the evening elegant and sophisticated.",
 
   },
 
@@ -98,7 +98,7 @@ const faqItems: FAQItem[] = [
 
     answer:
 
-      `We kindly ask that any additional guests be included in your RSVP so we can make proper arrangements. Please update your guest count when you submit your RSVP. Thank you for helping us create a perfect celebration for ${siteConfig.debutante.nickname}!`,
+      "We have reserved a specific seat for you. As much as we would love to accommodate everyone, we can only cater to the guests indicated on your invitation (1 invite admits 1 guest). Thank you for understanding!",
 
   },
 
