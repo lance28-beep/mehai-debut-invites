@@ -35,7 +35,7 @@ export function SnapShare() {
   const websiteUrl = typeof window !== "undefined" ? window.location.href : "https://example.com"
 
   const debutanteNick = siteConfig.debutante.nickname
-  const hashtags = [`#${debutanteNick}At18`, `#${debutanteNick}Debut2026`, "#ElegantCelebration", `#Debutante${debutanteNick}`]
+  const hashtags = [`#${debutanteNick}At18`]
 
   const shareText = `Celebrate ${debutanteNick}'s elegant debut! Explore the details and share your special memories: ${websiteUrl} ${hashtags.join(" ")} ✨`
 
